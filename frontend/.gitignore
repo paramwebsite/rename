@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+npm-debug.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Environment / Secrets
+.env
+*.env
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor Files
+.vscode/
+.idea/
+
+# Build / Output folders
+dist/
+build/
+*.log
+
+# Others
+*.sqlite3

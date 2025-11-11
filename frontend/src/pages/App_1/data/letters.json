@@ -1,0 +1,444 @@
+{
+  "A": [
+    {
+      "location": "Arvi, Maharashtra",
+      "coordinates": "18°27'52.4\"N 74°40'02.9\"E",
+      "link": "https://maps.app.goo.gl/154SL2rNucUTDpYd8",
+      "image": "src/pages/App_1/assets/Images/A1.png"
+    },
+    {
+      "location": "Kedarnath",
+      "coordinates": "30°42'22.9\"N 79°03'55.2\"E",
+      "link": "https://maps.app.goo.gl/ENg7UJJsMDozjQZX9",
+      "image": "src/pages/App_1/assets/Images/A1.png"
+    },
+    {
+      "location": "Mirapur, Amravathi",
+      "coordinates": "20°42'44.8\"N 77°35'02.1\"E",
+      "link": "https://maps.app.goo.gl/faTkqLhg4Ya1sm257",
+      "image": "src/pages/App_1/assets/Images/A3.png"
+    }
+  ],
+  "B": [
+    {
+      "location": "Juhili, Madhya Pradesh",
+      "coordinates": "22°53'35.9\"N 81°39'55.2\"E",
+      "image":   "src/pages/App_1/assets/Images/B3.png"
+       
+    },
+    {
+      "location": "Achalpur, Madhya Pradesh",
+      "coordinates": "22°53'56.3\"N 81°38'56.2\"E",
+      "image":   "src/pages/App_1/assets/Images/B1.png"
+       
+    },
+    {
+      "location": "Raichandwala, Rajasthan",
+      "coordinates": "27°51'35.4\"N 71°48'23.8\"E",
+      "image":   "src/pages/App_1/assets/Images/B2.png"
+       
+    }
+  ],
+  "C": [
+    {
+      "location": "Malampuzha-I, Kerala",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/C1.png"
+    },
+    {
+      "location": "Param Channenahalli, Karnataka",
+      "coordinates": "12°58'41.4\"N 77°26'00.5\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/C2.png"
+    }
+  ],
+  "D": [
+    {
+      "location": "Bommanagi, Karnataka",
+      "coordinates": "16°17'58.1\"N 76°01'31.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/D1.png"
+    },
+    {
+      "location": "Kolasar West, Rajasthan",
+      "coordinates": "27°48'44.4\"N 72°26'15.5\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/D2.png"
+    }
+  ],
+  "E": [
+    {
+      "location": "Jammu and Kashmir",
+      "coordinates": "33°34'23.4\"N 74°33'42.5\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/E1.png"
+    },
+    {
+      "location": "Vembar River, Tamil Nadu",
+      "coordinates": "9°06'16.6\"N 78°21'33.0\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/E2.png"
+    }
+  ],
+  "F": [
+    {
+      "location": "Silakot, Uttarakhand",
+      "coordinates": "130°01'49.3\"N 79°12'44.1\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/F1.png"
+    }
+  ],
+  "G": [
+    {
+      "location": "Manur, Maharashtra ",
+      "coordinates": "19°00'11.0\"N 77°33'15.5\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/G1.png"
+    },
+    {
+      "location": "Teep, Uttar Pradesh ",
+      "coordinates": "29°33'50.8\"N 78°03'23.3\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/G2.png"
+    }
+  ],
+  "H": [
+    {
+      "location": "Bakhari, Madhya Pradesh",
+      "coordinates": "22°21'10.0\"N 78°41'05.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/H1.png"
+    },
+    {
+      "location": "Raichandwala, Rajasthan",
+      "coordinates": "127°51'48.0\"N 71°48'44.6\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/H3.png"
+    },
+    {
+      "location": "Chakban Tarnei, Himachal Pradesh",
+      "coordinates": "32°10'05.7\"N 76°47'42.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/H2.png"
+    }
+  ],
+  "I": [
+    {
+      "location": "Krushnaprasad, Odisha",
+      "coordinates": "19°38'35.4\"N 85°17'01.0\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/I1.png"
+    },
+    {
+      "location": "India’s Andaman Island",
+      "coordinates": "13°02'10.3\"N 92°52'17.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/I2.png"
+    },
+    {
+      "location": "Matera, Uttar Pradesh",
+      "coordinates": "28°05'15.7\"N 81°09'17.6\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/I3.png"
+    }
+  ],
+  "J": [
+    {
+      "location": "Bengaluru, Karnataka",
+      "coordinates": "12°57'32.9\"N 77°30'54.3\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/J2.png"
+    },
+    {
+      "location": "West Bengal",
+      "coordinates": "21°43'36.1\"N 89°15'32.5\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/J1.png"
+    },
+    {
+      "location": "Andhra Pradesh",
+      "coordinates": "14°33'55.7\"N 79°29'26.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/J3.png"
+    }
+  ],
+  "K": [
+    {
+      "location": "Thummaloor, Telangana",
+      "coordinates": "17°07'12.5\"N 78°27'25.8\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/K1.png"
+    },
+    {
+      "location": "Mettupalle, Andhra Pradesh",
+      "coordinates": "15°15'04.3\"N 78°06'12.7\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/K2.png"
+    }
+  ],
+  "L": [
+    {
+      "location": "Thummaloor, Telangana",
+      "coordinates": "17°07'09.6\"N 78°27'34.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/L1.png"
+    },
+    {
+      "location": "Kovhala Jateshwar, Maharashtra",
+      "coordinates": "20°41'40.1\"N 77°40'02.0\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/L3.png"
+    },
+    {
+      "location": "Godavari River, Maharashtra",
+      "coordinates": "19°08'37.2\"N 77°19'08.8\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/L2.png"
+    }
+  ],
+  "M": [
+    {
+      "location": "Garuriya, Uttarakhand",
+      "coordinates": "30°42'53.1\"N 79°04'05.3\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/M2.png"
+    },
+    {
+      "location": "Odisha",
+      "coordinates": "20°23'12.0\"N 85°12'32.1\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/M1.png"
+    }
+  ],
+  "N": [
+    {
+      "location": "Tunda Renge, Uttarakhand",
+      "coordinates": "30°46'37.2\"N 78°23'26.3\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/N2.png"
+    },
+    {
+      "location": "Andhra Pradesh",
+      "coordinates": "14°33'56.1\"N 79°29'55.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/N1.png"
+    },
+    {
+      "location": "Andhra Pradesh",
+      "coordinates": "14°34'02.4\"N 79°29'40.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/N3.png"
+    }
+  ],
+  "O": [
+    {
+      "location": "Jogimuar, Madhya Pradesh",
+      "coordinates": "22°21'03.8\"N 78°48'12.8\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/O3.png"
+    },
+    {
+      "location": "Motasar, Rajasthan",
+      "coordinates": "27°49'01.4\"N 72°39'35.7\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/O1.png"
+    },
+    {
+      "location": "Vasco Da Gama, Goa",
+      "coordinates": "15°22'31.7\"N 73°47'46.1\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/O4.png"
+    }
+  ],
+  "P": [
+    {
+      "location": "Rahati, Maharashtra",
+      "coordinates": "20°41'51.3\"N 77°36'14.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/P3.png"
+    },
+    {
+      "location": "Chavara, Kerala",
+      "coordinates": "8°58'30.9\"N 76°31'49.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/P1.png"
+    },
+    {
+      "location": "Raichandwala, Rajasthan",
+      "coordinates": "27°51'54.9\"N 71°48'44.6\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/P2.png"
+    }
+  ],
+  "Q": [
+    {
+      "location": "Ramtek, Maharashtra",
+      "coordinates": "20°42'05.2\"N 77°37'44.1\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/Q2.png"
+    },
+    {
+      "location": "Lonar Lake, Maharashtra",
+      "coordinates": "19°58'33.2\"N 76°30'28.8\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/Q3.png"
+    }
+  ],
+  "R": [
+    {
+      "location": "Sundarban National Forest, West Bengal",
+      "coordinates": "21°50'15\"N 88°46'41\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/R1.png"
+    }
+  ],
+  "S": [
+    {
+      "location": "Sarbhoka, Chhattisgarh",
+      "coordinates": "22°48'44.3\"N 82°34'23.8\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/S3.png"
+    },
+    {
+      "location": "Sonhara, Madhya Pradesh",
+      "coordinates": "22°54'02.8\"N 81°41'08.6\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/S4.png"
+    },
+    {
+      "location": "Chakban Tarnei, Himachal Pradesh",
+      "coordinates": "32°10'05.7\"N 76°47'42.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/S2.png"
+    }
+  ],
+  "T": [
+    {
+      "location": "Nanjangud, Karnataka",
+      "coordinates": "12°07'29.0\"N 76°38'00.9\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/T3.png"
+    },
+    {
+      "location": "Matera, Uttar Pradesh",
+      "coordinates": "28°05'12.6\"N 81°08'28.6\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/T1.png"
+    },
+    {
+      "location": "Barala Rajasthan",
+      "coordinates": "28°18'21.4\"N 73°05'21.4\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/T2.png"
+    },
+    {
+      "location": "Sirivaram, Andhra Pradesh",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/T4.png"
+    }
+  ],
+  "U": [
+    {
+      "location": "Honnuru, Karnataka",
+      "coordinates": "12°17'13.1\"N 76°50'53.6\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/U2.png"
+    },
+    {
+      "location": "Dhanushkodi, Tamil Nadu",
+      "coordinates": "9°09'00.3\"N 79°26'57.6\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/U1.png"
+    }
+  ],
+  "V": [
+    {
+      "location": "Pathankot, Punjab",
+      "coordinates": "32°22'26.1\"N 75°33'25.0\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/V2.png"
+    },
+    {
+      "location": "Andhra Pradesh",
+      "coordinates": "14°33'43.4\"N 79°27'41.8\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/V3.png"
+    },
+    {
+      "location": "Mysuru, Karnataka",
+      "coordinates": "12°16'40.6\"N 76°40'13.0\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/V1.png"
+    }
+  ],
+  "W": [
+    {
+      "location": "Tarnei, Himachal Pradesh",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/W3.png"
+    },
+    {
+      "location": "Bhinlgana Range, Uttarakhand",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/W1.png"
+    }
+  ],
+  "X": [
+    {
+      "location": "Bakhari, Madhya Pradesh",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/X1.png"
+    },
+    {
+      "location": "Pithoragarh, Uttarakhand",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/X3.png"
+    },
+    {
+      "location": "Param Channenahalli, Karnataka ",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/X5.png"
+    }
+  ],
+  "Y": [
+    {
+      "location": "Handargall, Karnataka",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/Y3.png"
+    },
+    {
+      "location": "Candolim, Goa",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/Y1.png"
+    },
+    {
+      "location": "Bhopalpatnam, Chhattisgarh",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/Y2.png"
+    }
+  ],
+  "Z": [
+    {
+      "location": "Bhangarh Fort, Rajasthan",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/Z2.png"
+    },
+    {
+      "location": "Lobar, Himachal Pradesh",
+      "coordinates": "10°52'32.7\"N 76°42'44.2\"E",
+      "link": "https://maps.app.goo.gl/tgzRWmwQY7GA8Z1z7",
+      "image":   "src/pages/App_1/assets/Images/Z1.png"
+    }
+  ]
+}
