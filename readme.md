@@ -199,18 +199,18 @@ The system consists of **12 independent display applications**, each listening t
 
 | Display No. | File Name     | Application / Purpose Description  |
 | ----------- | ------------- | ---------------------------------- |
-| Display 1   | display1.jsx  | Primary generative visual output   |
-| Display 2   | display2.jsx  | Alternate visual interpretation    |
-| Display 3   | display3.jsx  | Text-based transformation view     |
-| Display 4   | display4.jsx  | Symbolic / coded name rendering    |
-| Display 5   | display5.jsx  | Data-driven graphic output         |
-| Display 6   | display6.jsx  | Experimental visual logic          |
-| Display 7   | display7.jsx  | Audio-reactive / signal-based view |
-| Display 8   | display8.jsx  | Language / typography exploration  |
-| Display 9   | display9.jsx  | Cultural / semantic mapping view   |
-| Display 10  | display10.jsx | Minimal / abstract representation  |
-| Display 11  | display11.jsx | System feedback / meta display     |
-| Display 12  | display12.jsx | Composite / summary visualization  |
+| Display 1   | display1.jsx  | formula based app   |
+| Display 2   | display2.jsx  | techno animal style    |
+| Display 3   | display3.jsx  | map view with 3 legends    |
+| Display 4   | display4.jsx  | landsat |
+| Display 5   | display5.jsx  | count similar to slot machine |
+| Display 6   | display6.jsx  | ai gen 1 |
+| Display 7   | display7.jsx  | video display with animation |
+| Display 8   | display8.jsx  | periodic speller  |
+| Display 9   | display9.jsx  | egyptian hierogylphs  |
+| Display 10  | display10.jsx | languages (22 official) |
+| Display 11  | display11.jsx | trends analysis |
+| Display 12  | display12.jsx | ai gen 2 complete img using getimg |
 
 Each display operates as an **independent application** while remaining synchronized through the backend broadcast layer.
 
