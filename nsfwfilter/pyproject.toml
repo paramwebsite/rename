@@ -1,0 +1,11 @@
+[project]
+name = "nsfwfilter"
+version = "1.0.0"
+description = "Optimized NSFW filter using compressed trie + hashing"
+authors = [{name="Tanya-Chhabhadiya"}]
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

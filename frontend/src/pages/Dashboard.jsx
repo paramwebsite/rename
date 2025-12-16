@@ -639,11 +639,11 @@ import Videos from "../component/Videos";
 import Dipslays from "../component/Dipslays";
 import VideoToDisplay from "../component/VideoToDisplay";
 import { API_URL } from "../utils/config";
-import { getSocket } from "../utils/socket";
+import { getWS, sendJSON } from "../utils/ws";
 import { authenticateUID } from "../utils/auth";   // ⬅️ NEW
 
 const Dashboard = () => {
-  const socket = useMemo(() => getSocket(), []);
+  const ws = useMemo(() => getWS(), []);
   const [stationId, setStationId] = useState("rename"); // must match RFID station id from reader
   const [uid, setUid] = useState("");
   const [name, setName] = useState("");
@@ -655,54 +655,115 @@ const Dashboard = () => {
   // typed UID for simulation
   const [simUID, setSimUID] = useState("");
 
-  useEffect(() => {
-    socket.emit("RegisterDashboard", 1);
-  }, [socket]);
+  // useEffect(() => {
+  //   socket.emit("RegisterDashboard", 1);
+  // }, [socket]);
 
   useEffect(() => {
-    const onDetected = (data) => {
-      if (!data || data.stationId !== stationId) return;
+    const onOpen = () => {
+      sendJSON(ws, { type: "registerDashboard", dashboardId: 1 });
+    };
 
-      // ✅ Verify authorization before proceeding (defense-in-depth)
-      // const auth = await authenticateUID(API_URL, data.UID);
-      // if (!auth.ok) {
-      //   setStatus(`❌ ${auth.body?.message || "Authorization failed"} (${auth.status})`);
-      //   setPhase("idle");
-      //   return;
-      // }
+    if (ws.readyState === WebSocket.OPEN) onOpen();
+    else ws.addEventListener("open", onOpen);
 
-      clearTimeout(timeoutRef.current);
-      setUid(data.UID);
-      setStatus(`Card detected: ${data.UID}`);
-      setPhase("form");
+    return () => ws.removeEventListener("open", onOpen);
+  }, [ws]);
 
-      timeoutRef.current = setTimeout(() => {
-        setStatus("⏱ Session timed out. Remove and reinsert card.");
+  // useEffect(() => {
+  //   const onDetected = (data) => {
+  //     if (!data || data.stationId !== stationId) return;
+
+  //     // ✅ Verify authorization before proceeding (defense-in-depth)
+  //     // const auth = await authenticateUID(API_URL, data.UID);
+  //     // if (!auth.ok) {
+  //     //   setStatus(`❌ ${auth.body?.message || "Authorization failed"} (${auth.status})`);
+  //     //   setPhase("idle");
+  //     //   return;
+  //     // }
+
+  //     clearTimeout(timeoutRef.current);
+  //     setUid(data.UID);
+  //     setStatus(`Card detected: ${data.UID}`);
+  //     setPhase("form");
+
+  //     timeoutRef.current = setTimeout(() => {
+  //       setStatus("⏱ Session timed out. Remove and reinsert card.");
+  //       setPhase("idle");
+  //       setUid("");
+  //       setName("");
+  //       socket.emit("ClearDisplays");
+  //     }, 60_000);
+  //   };
+
+  //   const onLifted = (data) => {
+  //     if (!data || data.stationId !== stationId) return;
+  //     clearTimeout(timeoutRef.current);
+  //     setStatus("Card lifted. Back to start.");
+  //     setPhase("idle");
+  //     setUid("");
+  //     setName("");
+  //     socket.emit("ClearDisplays");
+  //   };
+
+  //   // socket.on("card-detected", onDetected);
+  //   // socket.on("card-lifted", onLifted);
+
+
+  //   return () => {
+  //     socket.off("card-detected", onDetected);
+  //     socket.off("card-lifted", onLifted);
+  //     clearTimeout(timeoutRef.current);
+  //   };
+  // }, [socket, stationId]);
+
+  useEffect(() => {
+    const onMessage = (event) => {
+      let msg;
+      try {
+        msg = JSON.parse(event.data);
+      } catch {
+        return;
+      }
+
+      // card detected
+      if (msg.type === "card-detected") {
+        if (msg.stationId !== stationId) return;
+
+        clearTimeout(timeoutRef.current);
+        setUid(msg.UID);
+        setStatus(`Card detected: ${msg.UID}`);
+        setPhase("form");
+
+        timeoutRef.current = setTimeout(() => {
+          setStatus("⏱ Session timed out. Remove and reinsert card.");
+          setPhase("idle");
+          setUid("");
+          setName("");
+          sendJSON(ws, { type: "ClearDisplays" });
+        }, 60_000);
+      }
+
+      // card lifted
+      if (msg.type === "card-lifted") {
+        if (msg.stationId !== stationId) return;
+
+        clearTimeout(timeoutRef.current);
+        setStatus("Card lifted. Back to start.");
         setPhase("idle");
         setUid("");
         setName("");
-        socket.emit("ClearDisplays");
-      }, 60_000);
+        sendJSON(ws, { type: "ClearDisplays" });
+      }
     };
 
-    const onLifted = (data) => {
-      if (!data || data.stationId !== stationId) return;
-      clearTimeout(timeoutRef.current);
-      setStatus("Card lifted. Back to start.");
-      setPhase("idle");
-      setUid("");
-      setName("");
-      socket.emit("ClearDisplays");
-    };
+    ws.addEventListener("message", onMessage);
 
-    socket.on("card-detected", onDetected);
-    socket.on("card-lifted", onLifted);
     return () => {
-      socket.off("card-detected", onDetected);
-      socket.off("card-lifted", onLifted);
+      ws.removeEventListener("message", onMessage);
       clearTimeout(timeoutRef.current);
     };
-  }, [socket, stationId]);
+  }, [ws, stationId]);
 
   const onNameChange = (e) => setName(e.target.value);
 
@@ -726,7 +787,11 @@ const Dashboard = () => {
       setTimeout(() => setMessage(""), 3000);
       return;
     }
-    socket.emit("NameInput", { nameText: name.trim() });
+
+
+    //socket.emit("NameInput", { nameText: name.trim() });
+    sendJSON(ws, { type: "NameInput", nameText: name.trim() });
+
     try { await saveNameOnly(); } catch (e) { console.warn(e?.message); }
     setStatus("✅ Name sent to displays. Waiting for card lift…");
     setPhase("submitted");
@@ -858,11 +923,10 @@ const Dashboard = () => {
                   <button
                     onClick={handleNameSubmit}
                     disabled={name.trim().length === 0}
-                    className={`w-28 text-white font-medium py-2 rounded-lg transition ${
-                      name.trim().length === 0
-                        ? "bg-blue-300 cursor-not-allowed"
-                        : "bg-blue-600 hover:bg-blue-700"
-                    }`}
+                    className={`w-28 text-white font-medium py-2 rounded-lg transition ${name.trim().length === 0
+                      ? "bg-blue-300 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700"
+                      }`}
                   >
                     Submit
                   </button>

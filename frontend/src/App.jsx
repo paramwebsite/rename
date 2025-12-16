@@ -3,13 +3,21 @@ import { BrowserRouter, Routes,Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import HomePage from './pages/HomePage'
 import PageNotFound from './pages/PageNotFound'
-import Display1 from './pages/App_1/Display1'
-import Display2 from './pages/App_2/Display2'
-import Display3 from './pages/App_3/Display3'
+import Display4 from './pages/App_4/Display4'
+import Display8 from './pages/App_8/Display8'
+import Display10 from './pages/App_10/Display10'
 
 
-import Display4 from './pages/Display4'
+import Display1 from './pages/Display1'
 import Display5 from './pages/Display5'
+import Display6 from './pages/Display6'
+import Display7 from './pages/Display7'
+import Display2 from './pages/Display2'
+import Display9 from './pages/Display9'
+import Display3 from './pages/Display3'
+import Display11 from './pages/Display11'
+import Display12 from './pages/Display12'
+
 
 const App = () => {
   return (
@@ -25,6 +33,13 @@ const App = () => {
         <Route path='/display3' element={<Display3/>} />
         <Route path='/display4' element={<Display4/>} />
         <Route path='/display5' element={<Display5/>} />
+        <Route path='/display6' element={<Display6/>} />
+        <Route path='/display7' element={<Display7/>} />
+        <Route path='/display8' element={<Display8/>} />
+        <Route path='/display9' element={<Display9/>} />
+        <Route path='/display10' element={<Display10/>} />
+        <Route path='/display11' element={<Display11/>} />
+        <Route path='/display12' element={<Display12/>} />
         <Route path='*' element={<PageNotFound/>} />
       </Routes>
     </BrowserRouter>

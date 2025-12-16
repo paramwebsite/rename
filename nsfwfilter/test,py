@@ -1,0 +1,12 @@
+from nsfwfilter.trie_filter import NSFWFilter
+import os
+import nsfwfilter
+
+trie_path = os.path.join(os.path.dirname(nsfwfilter.__file__), "trie.json")
+flt = NSFWFilter(trie_path)
+
+text = "this is a en_badword_88_xx example"
+if flt.is_nsfw(text):
+    print("NSFW detected:", flt.find_nsfw(text))
+else:
+    print("Clean")

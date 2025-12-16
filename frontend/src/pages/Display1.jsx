@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getWS, sendJSON } from "../utils/ws";
 
-const displayId = 5;
+const displayId = 1;
 
-const Display5 = () => {
+const Display1 = () => {
   const ws = useMemo(() => getWS(), []);
   const [name, setName] = useState("");
 
@@ -52,7 +52,7 @@ const Display5 = () => {
 
         <div className="max-w-7xl mx-auto pt-10">
           <h1 className="text-center text-2xl capitalize font-semibold">
-            count Name: {name}
+            Formula Name: {name}
           </h1>
 
           <img
@@ -67,4 +67,4 @@ const Display5 = () => {
   );
 };
 
-export default Display5;
+export default Display1;

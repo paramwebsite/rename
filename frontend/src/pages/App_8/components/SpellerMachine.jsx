@@ -157,7 +157,7 @@
 
 
 
- 
+
 
 //   const SlotMachineContent = ({ element, index }) => {
 //     const [currentIndex, setCurrentIndex] = useState(0);
@@ -343,48 +343,89 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { periodicElements } from "../data/periodicElements";
-import { getSocket } from "../../../utils/socket"; // ⬅️ use the singleton (see earlier step)
+import { getWS } from "../../../utils/ws"; // ⬅️ use the singleton (see earlier step)
 
 const specialElements = {
-  j: { symbol: "J", atomicNumber: "-", fullName: "Joule", type: "nonmetal", color:{ from:"from-emerald-600/80", to:"to-emerald-400/80" } },
-  e: { symbol: "e⁻", atomicNumber: "-", fullName: "Electron", type: "nonmetal", color:{ from:"from-emerald-600/80", to:"to-emerald-400/80" } },
-  r: { symbol: "R", atomicNumber: "-", fullName: "Roentgen", type: "nonmetal", color:{ from:"from-emerald-600/80", to:"to-emerald-400/80" } },
-  m: { symbol: "M", atomicNumber: "-", fullName: "Mole", type: "nonmetal", color:{ from:"from-emerald-600/80", to:"to-emerald-400/80" } },
+  j: { symbol: "J", atomicNumber: "-", fullName: "Joule", type: "nonmetal", color: { from: "from-emerald-600/80", to: "to-emerald-400/80" } },
+  e: { symbol: "e⁻", atomicNumber: "-", fullName: "Electron", type: "nonmetal", color: { from: "from-emerald-600/80", to: "to-emerald-400/80" } },
+  r: { symbol: "R", atomicNumber: "-", fullName: "Roentgen", type: "nonmetal", color: { from: "from-emerald-600/80", to: "to-emerald-400/80" } },
+  m: { symbol: "M", atomicNumber: "-", fullName: "Mole", type: "nonmetal", color: { from: "from-emerald-600/80", to: "to-emerald-400/80" } },
 };
 
 export function SpellerMachine({ displayId }) {
   const [inputValue, setInputValue] = useState("");
   const [elements, setElements] = useState([]);
   const [shouldAnimate, setShouldAnimate] = useState(false);
+  const ws = useMemo(() => getWS(), []);
 
-  // ---- socket wiring
   useEffect(() => {
-    const socket = getSocket();
-
-    // register this display in its room
-    socket.emit("registerDisplay", displayId);
-
-    const onNewName = (data) => {
-      if (!data?.name) return;
-      setInputValue(data.name);
-      handleSubmit(data.name);
+    const onOpen = () => {
+      sendJSON(ws, { type: "registerDisplay", displayId });
     };
 
-    const onReset = () => {
-      setElements([]);
-      setInputValue("");
-      setShouldAnimate(false);
+    const onMessage = (event) => {
+      let msg;
+      try {
+        msg = JSON.parse(event.data);
+      } catch {
+        return;
+      }
+
+      if (msg.type === "newName") {
+        if (!msg?.name) return;
+        setInputValue(msg.name);
+        handleSubmit(msg.name);
+        return;
+      }
+
+      if (msg.type === "resetDisplay") {
+        setElements([]);
+        setInputValue("");
+        setShouldAnimate(false);
+        return;
+      }
     };
 
-    socket.on("newName", onNewName);
-    socket.on("resetDisplay", onReset);
+    if (ws.readyState === WebSocket.OPEN) onOpen();
+    else ws.addEventListener("open", onOpen);
+
+    ws.addEventListener("message", onMessage);
 
     return () => {
-      socket.off("newName", onNewName);
-      socket.off("resetDisplay", onReset);
-      // NOTE: do not disconnect the singleton here
+      ws.removeEventListener("open", onOpen);
+      ws.removeEventListener("message", onMessage);
+      // do NOT close singleton
     };
-  }, [displayId]); // register once per display
+  }, [ws, displayId, handleSubmit]);
+  // ---- socket wiring
+  // useEffect(() => {
+  //   const socket = getSocket();
+
+  //   // register this display in its room
+  //   socket.emit("registerDisplay", displayId);
+
+  //   const onNewName = (data) => {
+  //     if (!data?.name) return;
+  //     setInputValue(data.name);
+  //     handleSubmit(data.name);
+  //   };
+
+  //   const onReset = () => {
+  //     setElements([]);
+  //     setInputValue("");
+  //     setShouldAnimate(false);
+  //   };
+
+  //   socket.on("newName", onNewName);
+  //   socket.on("resetDisplay", onReset);
+
+  //   return () => {
+  //     socket.off("newName", onNewName);
+  //     socket.off("resetDisplay", onReset);
+  //     // NOTE: do not disconnect the singleton here
+  //   };
+  // }, [displayId]); // register once per display
+
 
   // ---- name → element tiles
   const processText = useCallback((text) => {
