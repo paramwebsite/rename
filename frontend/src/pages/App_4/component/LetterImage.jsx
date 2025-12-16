@@ -1,61 +1,113 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-export function LetterImage({ data, totalLetters, index, isSpace }) {
-  const [isLoaded, setIsLoaded] = useState(false); // Track image load state
+/* Portrait image ratio */
+const IMAGE_ASPECT = 1080 / 1920; // width / height = 0.5625
 
-  const baseWidth = Math.min(300, Math.max(100, 800 / totalLetters));
-  const baseHeight = (baseWidth * 1920) / 1080;
+export function LetterImage({
+  data,
+  index,
+  totalLetters,
+  containerWidth,
+  containerHeight,
+  isSpace,
+}) {
+  const [showLocation, setShowLocation] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  /* ---------------- Layout constants ---------------- */
+  const GAP = containerWidth * 0.01;
+  const TEXT_HEIGHT = containerHeight * 0.12;
+  const VERTICAL_PADDING = containerHeight * 0.08;
 
   if (isSpace) {
-    return <div style={{ width: baseWidth * 0.5 }} />;
+    return <div style={{ width: containerWidth * 0.03 }} />;
   }
+
+  /* ---------------- Core sizing math ---------------- */
+  const usableWidth =
+    containerWidth - GAP * (totalLetters - 1);
+  const maxWidthPerLetter = usableWidth / totalLetters;
+
+  const maxImageHeight =
+    containerHeight - TEXT_HEIGHT - VERTICAL_PADDING;
+
+  /* Candidate sizes */
+  const widthFromHeight = maxImageHeight * IMAGE_ASPECT;
+  const heightFromWidth = maxWidthPerLetter / IMAGE_ASPECT;
+
+  let imageWidth, imageHeight;
+
+  if (widthFromHeight <= maxWidthPerLetter) {
+    imageWidth = widthFromHeight;
+    imageHeight = maxImageHeight;
+  } else {
+    imageWidth = maxWidthPerLetter;
+    imageHeight = heightFromWidth;
+  }
+
+  /* ---------------- Text toggle ---------------- */
+  useEffect(() => {
+    const interval = setInterval(
+      () => setShowLocation((v) => !v),
+      5000
+    );
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div
-      className="flex flex-col items-center group"
+      className="flex flex-col items-center"
       style={{
-        animation: `fadeSlideIn 0.5s ease-out forwards`,
+        animation: "fadeSlideIn 0.5s ease-out forwards",
         animationDelay: `${index * 0.1}s`,
         opacity: 0,
-        transform: 'translateY(20px)',
+        transform: "translateY(20px)",
       }}
     >
-      <div className="relative overflow-hidden rounded-2xl border border-blue-500/20 shadow-lg transition-transform duration-300 group-hover:scale-105">
-        {/* Placeholder Skeleton while Image Loads */}
+      {/* Image */}
+      <div
+        className="relative overflow-hidden rounded-2xl shadow-lg"
+        style={{ width: imageWidth, height: imageHeight }}
+      >
         {!isLoaded && (
-          <div
-            className="absolute inset-0 bg-gray-800 animate-pulse"
-            style={{ width: baseWidth, height: baseHeight }}
-          />
+          <div className="absolute inset-0 bg-gray-700 animate-pulse" />
         )}
 
-        {/* Image with Fade-in Effect */}
         <img
           src={data.image}
-          alt={`Landsat imagery from ${data.location}`}
-          className={`transition-transform duration-300 group-hover:scale-110 ${
-            isLoaded ? 'opacity-100' : 'opacity-100'
-          }`}
-          style={{ width: baseWidth, height: baseHeight }}
-          onLoad={() => setIsLoaded(true)} // Show image when loaded
+          alt={data.location}
+          onLoad={() => setIsLoaded(true)}
+          style={{
+            width: imageWidth,
+            height: imageHeight,
+            objectFit: "cover",
+          }}
         />
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
-      {/* Text Containers */}
+      {/* Text */}
       <div
-        className="w-36 max-w-full whitespace-normal text-sm text-blue-300 hover:text-blue-200 transition-colors mt-2 group-hover:underline text-center"
-        style={{ width: baseWidth }}
+        className="
+          mt-2
+          flex
+          items-center
+          justify-center
+          text-center
+          text-blue-100
+          bg-[#06264D]
+          rounded-md
+          px-2
+        "
+        style={{
+          width: imageWidth,
+          height: TEXT_HEIGHT,
+          fontSize: containerHeight * 0.035,
+          boxShadow: "inset 2px 2px 4px rgba(255,255,255,0.3)",
+        }}
       >
-        {data.location}
-      </div>
-      <div
-        className="w-36 max-w-full whitespace-normal text-sm text-blue-300 hover:text-blue-200 transition-colors mt-2 group-hover:underline text-center"
-        style={{ width: baseWidth }}
-      >
-        {data.coordinates}
+        {showLocation ? data.location : data.coordinates}
       </div>
     </div>
   );
 }
+  
