@@ -191,6 +191,31 @@ Each display:
 
 ---
 
+## 🖥️ Display Applications Mapping
+
+The system consists of **12 independent display applications**, each listening to the same WebSocket broadcast but processing the data differently. The table below maps each display number to its associated application.
+
+> ⚠️ Update the **Application Purpose** column as per your actual implementation.
+
+| Display No. | File Name     | Application / Purpose Description  |
+| ----------- | ------------- | ---------------------------------- |
+| Display 1   | display1.jsx  | Primary generative visual output   |
+| Display 2   | display2.jsx  | Alternate visual interpretation    |
+| Display 3   | display3.jsx  | Text-based transformation view     |
+| Display 4   | display4.jsx  | Symbolic / coded name rendering    |
+| Display 5   | display5.jsx  | Data-driven graphic output         |
+| Display 6   | display6.jsx  | Experimental visual logic          |
+| Display 7   | display7.jsx  | Audio-reactive / signal-based view |
+| Display 8   | display8.jsx  | Language / typography exploration  |
+| Display 9   | display9.jsx  | Cultural / semantic mapping view   |
+| Display 10  | display10.jsx | Minimal / abstract representation  |
+| Display 11  | display11.jsx | System feedback / meta display     |
+| Display 12  | display12.jsx | Composite / summary visualization  |
+
+Each display operates as an **independent application** while remaining synchronized through the backend broadcast layer.
+
+---
+
 ## 🧪 Dashboard & RFID Simulation
 
 The system includes a **dashboard page** that simulates RFID behavior:
