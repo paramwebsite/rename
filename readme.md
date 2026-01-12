@@ -197,20 +197,20 @@ The system consists of **12 independent display applications**, each listening t
 
 > ⚠️ Update the **Application Purpose** column as per your actual implementation.
 
-| Display No. | File Name     | Application / Purpose Description  |
-| ----------- | ------------- | ---------------------------------- |
-| Display 1   | display1.jsx  | formula based app   |
-| Display 2   | display2.jsx  | techno animal style    |
-| Display 3   | display3.jsx  | map view with 3 legends    |
-| Display 4   | display4.jsx  | landsat |
-| Display 5   | display5.jsx  | count similar to slot machine |
-| Display 6   | display6.jsx  | ai gen 1 |
-| Display 7   | display7.jsx  | video display with animation |
-| Display 8   | display8.jsx  | periodic speller  |
-| Display 9   | display9.jsx  | egyptian hierogylphs  |
-| Display 10  | display10.jsx | languages (22 official) |
-| Display 11  | display11.jsx | trends analysis |
-| Display 12  | display12.jsx | ai gen 2 complete img using getimg |
+| Display No. | File Name     | res      |Application / Purpose Description  |
+| ----------- | ------------- | -------- |---------------------------------- |
+| Display 1   | display1.jsx  | 1:1      |formula based app   |
+| Display 2   | display2.jsx  | 1:1.75   |techno animal style    |
+| Display 3   | display3.jsx  | 2:1      |map view with 3 legends    |
+| Display 4   | display4.jsx  | 5.5:1    |landsat |
+| Display 5   | display5.jsx  | 1:1      |count similar to slot machine |
+| Display 6   | display6.jsx  | 1.5:1    |ai gen 1 |
+| Display 7   | display7.jsx  | 1:1      |video display with animation |
+| Display 8   | display8.jsx  | 4:1      |periodic speller  |
+| Display 9   | display9.jsx  | 1.25:2.25|egyptian hierogylphs  |
+| Display 10  | display10.jsx | 3:2      |languages (22 official) |
+| Display 11  | display11.jsx | 1:1      |trends analysis |
+| Display 12  | display12.jsx | 1.5:1.25 |ai gen 2 complete img using getimg |
 
 Each display operates as an **independent application** while remaining synchronized through the backend broadcast layer.
 
