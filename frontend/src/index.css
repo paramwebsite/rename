@@ -66,3 +66,39 @@
   background-repeat: repeat;
   background-size: 200px 200px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --------------------------------App_3_start------------------------------------------------------ */
+
+
+
+/* Custom font family (v4 way) */
+@theme {
+  --font-imfell: "IM Fell English", serif;
+}
+
+.antique-texture {
+  background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
+}
+.land-stroke {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+
+
+
+/* --------------------------------App_3_end------------------------------------------------------ */

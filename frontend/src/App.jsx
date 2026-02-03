@@ -14,9 +14,9 @@ import Display6 from './pages/Display6'
 import Display7 from './pages/Display7'
 import Display2 from './pages/Display2'
 import Display9 from './pages/Display9'
-import Display3 from './pages/Display3'
 import Display11 from './pages/Display11'
 import Display12 from './pages/Display12'
+import Display_3 from './pages/App_3/Display_3'
 
 
 const App = () => {
@@ -30,7 +30,7 @@ const App = () => {
         <Route path='/dashboard' element={<Dashboard/>} />
         <Route path='/display1' element={<Display1/>} />
         <Route path='/display2' element={<Display2/>} />
-        <Route path='/display3' element={<Display3/>} />
+        <Route path='/display3' element={<Display_3/>} />
         <Route path='/display4' element={<Display4/>} />
         <Route path='/display5' element={<Display5/>} />
         <Route path='/display6' element={<Display6/>} />
