@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getWS, sendJSON } from "../utils/ws";
+import { getWS, sendJSON } from "../../utils/ws";
 
 const displayId = 1;
 
@@ -44,9 +44,11 @@ const Display1 = () => {
   }, [ws]);
 
   return (
-    <div className="h-screen w-screen bg-[#000] flex items-center justify-center">
-      <div className="aspect-[5/6] w-full max-w-screen bg-[#fff5f5] overflow-hidden">
-        <p className="text-center text-2xl font-semibold bg-[#ffdeeb] py-5">
+    <div className="h-screen w-screen flex items-center justify-center">
+
+
+      <div className="aspect-[5/6] h-full  bg-black overflow-hidden text-white">
+        <p className="text-center text-2xl font-semibold  py-5">
           Display Name: Display-{displayId}
         </p>
 
@@ -54,13 +56,6 @@ const Display1 = () => {
           <h1 className="text-center text-2xl capitalize font-semibold">
             Formula Name: {name}
           </h1>
-
-          <img
-            id="myImage"
-            src="http://localhost:3001/images/myphoto.jpeg"
-            alt="Uploaded"
-            className="mx-auto w-[50%] object-contain"
-          />
         </div>
       </div>
     </div>

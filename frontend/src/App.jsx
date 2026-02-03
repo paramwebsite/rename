@@ -8,15 +8,17 @@ import Display8 from './pages/App_8/Display8'
 import Display10 from './pages/App_10/Display10'
 
 
-import Display1 from './pages/Display1'
+
 import Display5 from './pages/Display5'
 import Display6 from './pages/Display6'
 import Display7 from './pages/Display7'
 import Display2 from './pages/Display2'
-import Display9 from './pages/Display9'
 import Display11 from './pages/Display11'
 import Display12 from './pages/Display12'
 import Display_3 from './pages/App_3/Display_3'
+import Display_1 from './pages/App_1/Display_1'
+import Display_9 from './pages/App_9/Display_9'
+
 
 
 const App = () => {
@@ -28,7 +30,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<HomePage/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
-        <Route path='/display1' element={<Display1/>} />
+        <Route path='/display1' element={<Display_1/>} />
         <Route path='/display2' element={<Display2/>} />
         <Route path='/display3' element={<Display_3/>} />
         <Route path='/display4' element={<Display4/>} />
@@ -36,7 +38,7 @@ const App = () => {
         <Route path='/display6' element={<Display6/>} />
         <Route path='/display7' element={<Display7/>} />
         <Route path='/display8' element={<Display8/>} />
-        <Route path='/display9' element={<Display9/>} />
+        <Route path='/display9' element={<Display_9/>} />
         <Route path='/display10' element={<Display10/>} />
         <Route path='/display11' element={<Display11/>} />
         <Route path='/display12' element={<Display12/>} />
