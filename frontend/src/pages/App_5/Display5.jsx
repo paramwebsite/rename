@@ -7,7 +7,7 @@ import { getWS, sendJSON } from "../../utils/ws";
 
 const displayId = 5;
 
-export default function Display_5() {
+export default function Display5() {
    const ws = useMemo(() => getWS(), []);
    const [name, setName] = useState("");
    const [count, setCount] = useState(0);

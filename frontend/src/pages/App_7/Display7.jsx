@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getWS, sendJSON } from "../utils/ws";
+import { getWS, sendJSON } from "../../utils/ws";
 
-const displayId = 11;
+const displayId = 7;
 
-const Display11 = () => {
+const Display7 = () => {
   const ws = useMemo(() => getWS(), []);
   const [name, setName] = useState("");
 
@@ -44,27 +44,16 @@ const Display11 = () => {
   }, [ws]);
 
   return (
-    <div className="h-screen w-screen bg-[#000] flex items-center justify-center">
-      <div className="aspect-[5/6] w-full max-w-screen bg-[#fff5f5] overflow-hidden">
-        <p className="text-center text-2xl font-semibold bg-[#ffdeeb] py-5">
-          Display Name: Display-{displayId}
-        </p>
+    <div className="h-screen w-screen  flex flex-col items-center justify-center text-black">
+      <p className="text-center text-2xl font-semibold  py-5 text-black">
+        Display Name: Display-{displayId}
+      </p>
 
-        <div className="max-w-7xl mx-auto pt-10">
-          <h1 className="text-center text-2xl capitalize font-semibold">
-            trend Name: {name}
-          </h1>
-
-          <img
-            id="myImage"
-            src="http://localhost:3001/images/myphoto.jpeg"
-            alt="Uploaded"
-            className="mx-auto w-[50%] object-contain"
-          />
-        </div>
-      </div>
+      <h1 className="text-center text-2xl capitalize font-semibold">
+        video Name: {name}
+      </h1>
     </div>
   );
 };
 
-export default Display11;
+export default Display7;

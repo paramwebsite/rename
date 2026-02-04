@@ -1,11 +1,21 @@
-import React, { useEffect, useMemo, useState } from "react";
+// src/App.jsx
+import { useEffect, useMemo, useState } from "react";
+import InputScreen from "./components/InputScreen";
+import ResultScreen from "./components/ResultScreen";
 import { getWS, sendJSON } from "../../utils/ws";
 
 const displayId = 9;
 
-const Display9 = () => {
+export default function Display9() {
+  const [name, setName] = useState(null);
+
+  const handleSubmit = (name) => {
+    setName(name);
+  };
+
+  // --------------------------- web socket start ------------------------------
+
   const ws = useMemo(() => getWS(), []);
-  const [name, setName] = useState("");
 
   useEffect(() => {
     const onOpen = () => {
@@ -23,7 +33,8 @@ const Display9 = () => {
 
       if (msg.type === "newName") {
         console.log("Received new name:", msg.name);
-        setName(msg.name);
+        // setName(msg.name);
+        handleSubmit(msg.name);
       }
 
       if (msg.type === "resetDisplay") {
@@ -43,23 +54,19 @@ const Display9 = () => {
     };
   }, [ws]);
 
-  return (
-    <div className="h-screen w-screen bg-[#000] flex items-center justify-center">
-      <div className="aspect-[5/6] h-full  bg-black overflow-hidden text-white">
-        <p className="text-center text-2xl font-semibold  py-5">
-           Display Name: Display-{displayId}
-        </p>
+  // --------------------------- web socket End ------------------------------
 
-        <div className="max-w-7xl mx-auto pt-10">
-          <h1 className="text-center text-2xl capitalize font-semibold">
-            egyptian Name: {name}
-          </h1>
-        </div>
-      </div>
+  // useEffect(()=>{
 
-      
-    </div>
+  //   setTimeout(() => {
+
+  //     handleSubmit("abhishek");
+  //   }, 2000);
+  // },[])
+
+  return name ? (
+    <ResultScreen name={name} onBack={() => setName(null)} />
+  ) : (
+    <InputScreen onSubmit={setName} />
   );
-};
-
-export default Display9;
+}

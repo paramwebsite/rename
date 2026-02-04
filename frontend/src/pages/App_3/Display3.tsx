@@ -16,7 +16,7 @@ import { getWS, sendJSON } from "../../utils/ws";
 
 const displayId = 3;
 
-const Display_3: React.FC = () => {
+const Display3: React.FC = () => {
   const [activeName, setActiveName] = useState<string>("");
   const [popularityData, setPopularityData] = useState<CountryPopularity[]>([]);
   const [originData, setOriginData] = useState<OriginData | null>(null);
@@ -37,7 +37,7 @@ const Display_3: React.FC = () => {
       sendJSON(ws, { type: "registerDisplay", displayId });
     };
 
-    const onMessage = (event) => {
+    const onMessage = (event:any) => {
       let msg;
       try {
         msg = JSON.parse(event.data);
@@ -68,9 +68,9 @@ const Display_3: React.FC = () => {
     };
   }, [ws]);
 
-  const handleSubmit = (value) => {
+  const handleSubmit = (value:string) => {
     if (value.trim() && !isLoading) {
-      // handleSearch(value);
+      handleSearch(value);
     }
   };
 
@@ -181,4 +181,4 @@ const Display_3: React.FC = () => {
   );
 };
 
-export default Display_3;
+export default Display3;

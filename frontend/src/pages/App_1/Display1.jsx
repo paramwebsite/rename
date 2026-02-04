@@ -1,11 +1,65 @@
 import React, { useEffect, useMemo, useState } from "react";
+import ResultScreen from "./ResultScreen";
+import InputScreen from "./InputScreen";
 import { getWS, sendJSON } from "../../utils/ws";
+
+/**
+ * Name → Scientific Formula Engine
+ * - Greedy matching (longest patterns first)
+ * - Pattern bank ~150
+ * - Deterministic alternate symbol selection per name
+ * - Chalkboard result with chalk-writing animation
+ */
+
+/* ------------------------------ utilities ------------------------------ */
+
+
+
+/* ------------------------------ pattern bank ------------------------------ */
+
+
+
+/* ------------------------------ compiler ------------------------------ */
+
+
+
+/* ------------------------------ Chalk writer ------------------------------ */
+
+
+
+/* ------------------------------ UI ------------------------------ */
+
+
+
+
+
+/* ------------------------------ main app ------------------------------ */
+
+
+
+
 
 const displayId = 1;
 
-const Display1 = () => {
-  const ws = useMemo(() => getWS(), []);
+export default function Display1() {
+  const [screen, setScreen] = useState("input");
   const [name, setName] = useState("");
+
+
+  const handlesubmit= (nm) => {
+        const clean = nm.trim();
+        if (!clean) return;
+        setName(clean);
+        setScreen("result");
+      }
+
+
+
+
+
+
+      // --------------------------------- web socket start--------------------------
+const ws = useMemo(() => getWS(), []);
 
   useEffect(() => {
     const onOpen = () => {
@@ -24,6 +78,7 @@ const Display1 = () => {
       if (msg.type === "newName") {
         console.log("Received new name:", msg.name);
         setName(msg.name);
+        handlesubmit(msg.name)
       }
 
       if (msg.type === "resetDisplay") {
@@ -43,23 +98,40 @@ const Display1 = () => {
     };
   }, [ws]);
 
-  return (
-    <div className="h-screen w-screen flex items-center justify-center">
 
 
-      <div className="aspect-[5/6] h-full  bg-black overflow-hidden text-white">
-        <p className="text-center text-2xl font-semibold  py-5">
-          Display Name: Display-{displayId}
-        </p>
 
-        <div className="max-w-7xl mx-auto pt-10">
-          <h1 className="text-center text-2xl capitalize font-semibold">
-            Formula Name: {name}
-          </h1>
-        </div>
-      </div>
-    </div>
+
+
+
+
+      // --------------------------------- web socket End--------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  return screen === "input" ? (
+    <InputScreen
+      onSubmit={handlesubmit}
+    />
+  ) : (
+    <ResultScreen
+      name={name}
+      onBack={() => {
+        setScreen("input");
+      }}
+    />
   );
-};
-
-export default Display1;
+}
