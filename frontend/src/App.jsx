@@ -9,7 +9,6 @@ import Display10 from './pages/App_10/Display10'
 
 
 
-import Display5 from './pages/Display5'
 import Display6 from './pages/Display6'
 import Display7 from './pages/Display7'
 import Display2 from './pages/Display2'
@@ -18,6 +17,7 @@ import Display12 from './pages/Display12'
 import Display_3 from './pages/App_3/Display_3'
 import Display_1 from './pages/App_1/Display_1'
 import Display_9 from './pages/App_9/Display_9'
+import Display_5 from './pages/App_5/Display_5'
 
 
 
@@ -34,7 +34,7 @@ const App = () => {
         <Route path='/display2' element={<Display2/>} />
         <Route path='/display3' element={<Display_3/>} />
         <Route path='/display4' element={<Display4/>} />
-        <Route path='/display5' element={<Display5/>} />
+        <Route path='/display5' element={<Display_5/>} />
         <Route path='/display6' element={<Display6/>} />
         <Route path='/display7' element={<Display7/>} />
         <Route path='/display8' element={<Display8/>} />
