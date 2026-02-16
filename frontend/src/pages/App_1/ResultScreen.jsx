@@ -1,49 +1,129 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 
-
-
-
-
 const PATTERNS = [
-  { key: "sha", out: ["σ_h", "sinh(a)"], desc: "Shear stress or hyperbolic sine." },
-  { key: "shi", out: ["sinh(i)", "σ_i"], desc: "Hyperbolic sine or sigma index." },
+  {
+    key: "sha",
+    out: ["σ_h", "sinh(a)"],
+    desc: "Shear stress or hyperbolic sine.",
+  },
+  {
+    key: "shi",
+    out: ["sinh(i)", "σ_i"],
+    desc: "Hyperbolic sine or sigma index.",
+  },
   { key: "sh", out: ["σ", "∫"], desc: "Sigma summation or integral flow." },
-  { key: "kri", out: ["K_r,i", "κ_r(i)"], desc: "Curvature or indexed constant." },
+  {
+    key: "kri",
+    out: ["K_r,i", "κ_r(i)"],
+    desc: "Curvature or indexed constant.",
+  },
   { key: "dev", out: ["ΔV", "∇·E"], desc: "Change in volume or divergence." },
-  { key: "raj", out: ["r_aj", "R_a·J"], desc: "Radius index or resistance-current." },
+  {
+    key: "raj",
+    out: ["r_aj", "R_a·J"],
+    desc: "Radius index or resistance-current.",
+  },
   { key: "rah", out: ["r_h", "ρ_h"], desc: "Radius height or density index." },
-  { key: "ram", out: ["r·a·m", "m·a"], desc: "Radius-times-acceleration or force core." },
+  {
+    key: "ram",
+    out: ["r·a·m", "m·a"],
+    desc: "Radius-times-acceleration or force core.",
+  },
   { key: "kam", out: ["k·m", "K_m"], desc: "Spring-mass pairing or constant." },
   { key: "kal", out: ["k_ℓ", "K_L"], desc: "Length-scale constant." },
-  { key: "tan", out: ["tan(θ)", "sin(θ)/cos(θ)"], desc: "Tangent angle or sin over cos." },
-  { key: "sin", out: ["sin(θ)", "Im(e^{iθ})"], desc: "Sine wave or imaginary exponential." },
-  { key: "cos", out: ["cos(θ)", "Re(e^{iθ})"], desc: "Cosine wave or real exponential." },
-  { key: "sec", out: ["sec(θ)", "1/cos(θ)"], desc: "Secant angle or inverse cosine." },
-  { key: "csc", out: ["csc(θ)", "1/sin(θ)"], desc: "Cosecant angle or inverse sine." },
-  { key: "cot", out: ["cot(θ)", "cos(θ)/sin(θ)"], desc: "Cotangent or cos over sin." },
+  {
+    key: "tan",
+    out: ["tan(θ)", "sin(θ)/cos(θ)"],
+    desc: "Tangent angle or sin over cos.",
+  },
+  {
+    key: "sin",
+    out: ["sin(θ)", "Im(e^{iθ})"],
+    desc: "Sine wave or imaginary exponential.",
+  },
+  {
+    key: "cos",
+    out: ["cos(θ)", "Re(e^{iθ})"],
+    desc: "Cosine wave or real exponential.",
+  },
+  {
+    key: "sec",
+    out: ["sec(θ)", "1/cos(θ)"],
+    desc: "Secant angle or inverse cosine.",
+  },
+  {
+    key: "csc",
+    out: ["csc(θ)", "1/sin(θ)"],
+    desc: "Cosecant angle or inverse sine.",
+  },
+  {
+    key: "cot",
+    out: ["cot(θ)", "cos(θ)/sin(θ)"],
+    desc: "Cotangent or cos over sin.",
+  },
 
   { key: "aa", out: ["a^2", "αα"], desc: "Squared amplitude or twin alpha." },
-  { key: "ee", out: ["E_e", "e^e"], desc: "Electric field index or exponential growth." },
+  {
+    key: "ee",
+    out: ["E_e", "e^e"],
+    desc: "Electric field index or exponential growth.",
+  },
   { key: "oo", out: ["∞", "O_0"], desc: "Infinity loop or base state." },
   { key: "th", out: ["θ", "∴"], desc: "Theta angle or therefore." },
   { key: "ph", out: ["φ", "Φ"], desc: "Phase angle or flux." },
   { key: "ch", out: ["χ", "c·h"], desc: "Chi variable or light-times-Planck." },
-  { key: "kh", out: ["k_h", "κ_h"], desc: "Height constant or curvature index." },
+  {
+    key: "kh",
+    out: ["k_h", "κ_h"],
+    desc: "Height constant or curvature index.",
+  },
   { key: "dh", out: ["dH", "Δh"], desc: "Enthalpy change or height change." },
-  { key: "bh", out: ["B·h", "β_h"], desc: "Magnetic-height term or beta index." },
+  {
+    key: "bh",
+    out: ["B·h", "β_h"],
+    desc: "Magnetic-height term or beta index.",
+  },
   { key: "gh", out: ["g·h", "ΔU"], desc: "Gravitational potential step." },
-  { key: "ng", out: ["η_g", "n·g"], desc: "Efficiency index or density-gravity." },
-  { key: "st", out: ["s·t", "∫dt"], desc: "Distance-time pair or time integral." },
-  { key: "pr", out: ["P_r", "p·r"], desc: "Pressure-radius or Prandtl style index." },
+  {
+    key: "ng",
+    out: ["η_g", "n·g"],
+    desc: "Efficiency index or density-gravity.",
+  },
+  {
+    key: "st",
+    out: ["s·t", "∫dt"],
+    desc: "Distance-time pair or time integral.",
+  },
+  {
+    key: "pr",
+    out: ["P_r", "p·r"],
+    desc: "Pressure-radius or Prandtl style index.",
+  },
   { key: "ra", out: ["r_a", "R_a"], desc: "Radius-at-a or resistance index." },
-  { key: "ma", out: ["m·a", "F"], desc: "Force core: mass times acceleration." },
+  {
+    key: "ma",
+    out: ["m·a", "F"],
+    desc: "Force core: mass times acceleration.",
+  },
   { key: "ka", out: ["k_a", "κ_a"], desc: "Spring/curvature constant at a." },
   { key: "ya", out: ["y_a", "γ_a"], desc: "Y-position or gamma index." },
-  { key: "na", out: ["N_A", "n_a"], desc: "Avogadro constant or amount index." },
+  {
+    key: "na",
+    out: ["N_A", "n_a"],
+    desc: "Avogadro constant or amount index.",
+  },
   { key: "la", out: ["λ", "L_a"], desc: "Wavelength or length index." },
   { key: "ri", out: ["r_i", "R_i"], desc: "Inner radius or resistance index." },
-  { key: "vi", out: ["v_i", "V_i"], desc: "Initial velocity or initial voltage." },
-  { key: "li", out: ["ℓ_i", "L_i"], desc: "Length element or inductance index." },
+  {
+    key: "vi",
+    out: ["v_i", "V_i"],
+    desc: "Initial velocity or initial voltage.",
+  },
+  {
+    key: "li",
+    out: ["ℓ_i", "L_i"],
+    desc: "Length element or inductance index.",
+  },
   { key: "an", out: ["a_n", "∠n"], desc: "Nth acceleration or angle marker." },
   { key: "ar", out: ["a_r", "r"], desc: "Radial acceleration or radius." },
   { key: "sa", out: ["s_a", "σ_a"], desc: "Path coordinate or sigma index." },
@@ -51,12 +131,24 @@ const PATTERNS = [
   { key: "ta", out: ["τ_a", "t_a"], desc: "Time constant or time index." },
 
   { key: "force", out: ["F", "m·a"], desc: "Force or mass-acceleration form." },
-  { key: "energy", out: ["E", "m c^2"], desc: "Energy core or relativistic form." },
-  { key: "power", out: ["P", "F·v"], desc: "Power or force-velocity transfer." },
+  {
+    key: "energy",
+    out: ["E", "m c^2"],
+    desc: "Energy core or relativistic form.",
+  },
+  {
+    key: "power",
+    out: ["P", "F·v"],
+    desc: "Power or force-velocity transfer.",
+  },
   { key: "work", out: ["W", "∫F·ds"], desc: "Work or force along path." },
   { key: "heat", out: ["Q", "m c_p ΔT"], desc: "Heat or calorimetry form." },
   { key: "mass", out: ["m", "ρV"], desc: "Mass or density-volume form." },
-  { key: "wave", out: ["λ", "f^{-1}c"], desc: "Wavelength or c over frequency." },
+  {
+    key: "wave",
+    out: ["λ", "f^{-1}c"],
+    desc: "Wavelength or c over frequency.",
+  },
 
   { key: "c", out: ["c", "3×10^8"], desc: "Speed of light constant." },
   { key: "g", out: ["g", "9.8"], desc: "Gravity constant." },
@@ -70,13 +162,21 @@ const PATTERNS = [
 
   { key: "alpha", out: ["α"], desc: "Alpha: origin, self, first principle." },
   { key: "beta", out: ["β"], desc: "Beta: growth, response factor." },
-  { key: "gamma", out: ["γ"], desc: "Gamma: energy scale or relativity factor." },
+  {
+    key: "gamma",
+    out: ["γ"],
+    desc: "Gamma: energy scale or relativity factor.",
+  },
   { key: "delta", out: ["Δ"], desc: "Delta: change or difference." },
   { key: "theta", out: ["θ"], desc: "Theta: angle or phase." },
   { key: "lambda", out: ["λ"], desc: "Lambda: wavelength or eigen-parameter." },
   { key: "sigma", out: ["σ", "∑"], desc: "Sigma: stress or summation." },
   { key: "phi", out: ["φ", "Φ"], desc: "Phi: phase or flux." },
-  { key: "omega", out: ["Ω", "ω"], desc: "Omega: resistance or angular frequency." },
+  {
+    key: "omega",
+    out: ["Ω", "ω"],
+    desc: "Omega: resistance or angular frequency.",
+  },
   { key: "tau", out: ["τ"], desc: "Tau: time constant." },
   { key: "rho", out: ["ρ"], desc: "Rho: density." },
   { key: "eta", out: ["η"], desc: "Eta: efficiency or viscosity." },
@@ -109,25 +209,111 @@ const PATTERNS = [
 ];
 
 const GENERATED_SYLLABLES = [
-  "ab","ad","ag","ak","al","am","an","ar","as","at","av","ay",
-  "ba","be","bi","bo","bu","by",
-  "ca","ce","ci","co","cu","cy",
-  "da","de","di","do","du",
-  "ea","el","em","en","er","es","et",
-  "fa","fi","fo","ga","ge","gi","go",
-  "ia","il","im","in","ir","is","it",
-  "ja","je","ji","jo",
-  "ki","ko","ku",
-  "le","lo","lu",
-  "me","mi","mo","mu",
-  "ne","ni","no","nu",
-  "ol","om","on","or","os","ot",
-  "pa","pe","pi","po","pu",
-  "re","ro","ru",
-  "se","si","so","su",
-  "te","ti","to","tu",
-  "ul","um","un","ur",
-  "va","ve","vo","wa","wi","ya","yo","za","ze","zi","zo"
+  "ab",
+  "ad",
+  "ag",
+  "ak",
+  "al",
+  "am",
+  "an",
+  "ar",
+  "as",
+  "at",
+  "av",
+  "ay",
+  "ba",
+  "be",
+  "bi",
+  "bo",
+  "bu",
+  "by",
+  "ca",
+  "ce",
+  "ci",
+  "co",
+  "cu",
+  "cy",
+  "da",
+  "de",
+  "di",
+  "do",
+  "du",
+  "ea",
+  "el",
+  "em",
+  "en",
+  "er",
+  "es",
+  "et",
+  "fa",
+  "fi",
+  "fo",
+  "ga",
+  "ge",
+  "gi",
+  "go",
+  "ia",
+  "il",
+  "im",
+  "in",
+  "ir",
+  "is",
+  "it",
+  "ja",
+  "je",
+  "ji",
+  "jo",
+  "ki",
+  "ko",
+  "ku",
+  "le",
+  "lo",
+  "lu",
+  "me",
+  "mi",
+  "mo",
+  "mu",
+  "ne",
+  "ni",
+  "no",
+  "nu",
+  "ol",
+  "om",
+  "on",
+  "or",
+  "os",
+  "ot",
+  "pa",
+  "pe",
+  "pi",
+  "po",
+  "pu",
+  "re",
+  "ro",
+  "ru",
+  "se",
+  "si",
+  "so",
+  "su",
+  "te",
+  "ti",
+  "to",
+  "tu",
+  "ul",
+  "um",
+  "un",
+  "ur",
+  "va",
+  "ve",
+  "vo",
+  "wa",
+  "wi",
+  "ya",
+  "yo",
+  "za",
+  "ze",
+  "zi",
+  "zo",
 ];
 
 function buildGeneratedEntries() {
@@ -156,7 +342,10 @@ function buildGeneratedEntries() {
       out = ["t_" + syl[1], "τ_" + syl[1]];
       desc = "Time marker or time constant.";
     } else if (c === "r") {
-      out = ["[" + "r_" + syl[1] + "]".replace("[", "").replace("]", ""), "R_" + syl[1]];
+      out = [
+        "[" + "r_" + syl[1] + "]".replace("[", "").replace("]", ""),
+        "R_" + syl[1],
+      ];
       desc = "Radius or resistance index.";
     } else if (c === "k") {
       out = ["k_" + syl[1], "κ_" + syl[1]];
@@ -185,7 +374,6 @@ function buildGeneratedEntries() {
 
 const FULL_BANK = [...PATTERNS, ...buildGeneratedEntries()];
 
-
 function hashString(str) {
   // deterministic small hash for repeatable symbol choices
   let h = 2166136261;
@@ -201,7 +389,6 @@ function isAlphaNumOrGreek(ch) {
   return /[A-Za-z0-9α-ωΑ-ΩℓμτΔΩπσθλγβ]/.test(ch);
 }
 
-
 function ChalkCanvas({ textLines, isActive, onDone }) {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
@@ -210,6 +397,7 @@ function ChalkCanvas({ textLines, isActive, onDone }) {
     lineIndex: 0,
     charIndex: 0,
     done: false,
+    fontSize: 64, // will be calculated once
   });
 
   useEffect(() => {
@@ -224,15 +412,45 @@ function ChalkCanvas({ textLines, isActive, onDone }) {
     canvas.height = Math.floor(rect.height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    stateRef.current = { lineIndex: 0, charIndex: 0, done: false };
+    stateRef.current = {
+      lineIndex: 0,
+      charIndex: 0,
+      done: false,
+      fontSize: 64,
+    };
 
     const chalkColor = "rgba(245,245,245,0.92)";
+    const fullText = textLines[0] || "";
+
+    // ----------- CALCULATE FONT SIZE ONCE (using FULL string) -----------
+
+    const horizontalPadding = 180;
+    const maxWidth = rect.width - horizontalPadding;
+    const maxHeight = rect.height - 160;
+
+    let fontSize = 64;
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    while (fontSize > 24) {
+      ctx.font = `${fontSize}px 'Patrick Hand', 'Comic Sans MS', system-ui`;
+      const width = ctx.measureText(fullText).width;
+
+      if (width <= maxWidth && fontSize <= maxHeight * 0.5) break;
+
+      fontSize -= 2;
+    }
+
+    stateRef.current.fontSize = fontSize;
+
+    // ---------------------------------------------------------------
 
     function clear() {
       ctx.clearRect(0, 0, rect.width, rect.height);
     }
 
-    function drawChalkText(partialLines) {
+    function drawChalkText(partialText) {
       clear();
 
       ctx.save();
@@ -240,29 +458,24 @@ function ChalkCanvas({ textLines, isActive, onDone }) {
       ctx.shadowColor = "rgba(255,255,255,0.25)";
       ctx.shadowBlur = 2;
 
-      partialLines.forEach((ln, idx) => {
-        const y = 110 + idx * 54;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = `${stateRef.current.fontSize}px 'Patrick Hand', 'Comic Sans MS', system-ui`;
+      ctx.fillStyle = chalkColor;
 
-        // This is still the right place for it (canvas, not CSS)
-        ctx.font = "64px 'Patrick Hand', 'Comic Sans MS', system-ui";
-        ctx.fillStyle = chalkColor;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
 
-        const jitterX = (Math.random() - 0.5) * 1.4;
-        const jitterY = (Math.random() - 0.5) * 1.0;
+      ctx.fillText(partialText, centerX, centerY);
 
-        ctx.fillText(ln, 70 + jitterX, y + jitterY);
-
-        const specks = 70;
-        for (let s = 0; s < specks; s++) {
-          const x = 70 + Math.random() * (rect.width - 140);
-          const yy = y - 28 + Math.random() * 40;
-          ctx.fillStyle = `rgba(255,255,255,${0.03 + Math.random() * 0.06})`;
-          ctx.fillRect(x, yy, 1, 1);
-        }
-
-        ctx.fillStyle = "rgba(255,255,255,0.05)";
-        ctx.fillRect(70, y + 10, rect.width - 140, 1);
-      });
+      // subtle underline
+      ctx.fillStyle = "rgba(255,255,255,0.05)";
+      ctx.fillRect(
+        rect.width * 0.2,
+        centerY + stateRef.current.fontSize * 0.6,
+        rect.width * 0.6,
+        1,
+      );
 
       ctx.restore();
     }
@@ -271,29 +484,19 @@ function ChalkCanvas({ textLines, isActive, onDone }) {
       const st = stateRef.current;
       if (st.done) return;
 
-      const fullLines = textLines;
-      const rendered = [];
+      const full = textLines[0] || "";
+      const partial = full.slice(0, Math.floor(st.charIndex));
 
-      for (let li = 0; li < fullLines.length; li++) {
-        if (li < st.lineIndex) rendered.push(fullLines[li]);
-        else if (li === st.lineIndex) rendered.push(fullLines[li].slice(0, Math.floor(st.charIndex)));
-        else rendered.push("");
-      }
+      drawChalkText(partial);
 
-      drawChalkText(rendered);
-
-      const current = fullLines[st.lineIndex] || "";
       const speed = 0.6;
       st.charIndex += speed;
 
-      if (st.charIndex >= current.length) {
-        st.lineIndex += 1;
-        st.charIndex = 0;
-        if (st.lineIndex >= fullLines.length) {
-          st.done = true;
-          onDone?.();
-          return;
-        }
+      if (st.charIndex >= full.length) {
+        st.done = true;
+        drawChalkText(full);
+        onDone?.();
+        return;
       }
 
       rafRef.current = requestAnimationFrame(step);
@@ -314,7 +517,9 @@ function compileNameToFormula(nameRaw) {
   const cleaned = name.replace(/[^a-z]/g, "");
   const seed = hashString(cleaned);
 
-  const patterns = FULL_BANK.slice().sort((a, b) => b.key.length - a.key.length);
+  const patterns = FULL_BANK.slice().sort(
+    (a, b) => b.key.length - a.key.length,
+  );
 
   const tokens = [];
   const interpretations = [];
@@ -343,7 +548,11 @@ function compileNameToFormula(nameRaw) {
     const chosen = alts[pickIndex];
 
     tokens.push(chosen);
-    interpretations.push({ chunk: matched.key, out: chosen, desc: matched.desc });
+    interpretations.push({
+      chunk: matched.key,
+      out: chosen,
+      desc: matched.desc,
+    });
 
     i += matched.key.length;
   }
@@ -364,11 +573,12 @@ function compileNameToFormula(nameRaw) {
     formula += (t === 0 ? "" : needsDot ? "·" : "") + cur;
   }
 
-  const pretty = formula.length > 18 ? `ℱ(${nameRaw.trim()}) = ${formula}` : formula;
+  const pretty =
+    formula.length > 18 ? ` ${formula}` : formula;
   return { cleaned, formula: pretty, interpretations };
 }
 
-export default  function ResultScreen({ name, onBack }) {
+export default function ResultScreen({ name, onBack }) {
   const compiled = useMemo(() => compileNameToFormula(name), [name]);
   const chalkLines = [compiled.formula];
   const [done, setDone] = useState(false);
@@ -377,16 +587,16 @@ export default  function ResultScreen({ name, onBack }) {
     <div className="min-h-screen w-full bg-[radial-gradient(1200px_700px_at_30%_20%,#1a1f2b,#0b0f16)] px-[18px] py-[18px] font-sans text-[#eaf0ff] flex items-center justify-center">
       <div className="w-[min(980px,96vw)] flex flex-col gap-3.5">
         <div className="flex items-center justify-between gap-2.5 px-1 py-2">
-          <button
+          {/* <button
             onClick={onBack}
             className="rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 font-bold text-white hover:bg-white/10 active:bg-white/5"
           >
             ← Back
-          </button>
+          </button> */}
 
-          <div className="font-bold opacity-85">
+          {/* <div className="font-bold opacity-85">
             Result for: <span className="opacity-100">{name}</span>
-          </div>
+          </div> */}
 
           <div className="w-[88px]" />
         </div>
@@ -403,10 +613,12 @@ export default  function ResultScreen({ name, onBack }) {
           </div>
 
           {/* Kept behavior (done) even though footer is commented out in original */}
-          <span className="sr-only">{done ? "Chalk complete." : "Writing…"}</span>
+          <span className="sr-only">
+            {done ? "Chalk complete." : "Writing…"}
+          </span>
         </div>
 
-        <div className="mx-auto w-[min(820px,96vw)] rounded-[18px] border border-white/10 bg-white/5 p-[18px] backdrop-blur-[10px]">
+        {/* <div className="mx-auto w-[min(820px,96vw)] rounded-[18px] border border-white/10 bg-white/5 p-[18px] backdrop-blur-[10px]">
           <div className="mb-2 font-extrabold">Full interpretation</div>
           <div className="mb-2.5 opacity-75">
             Every matched chunk → chosen scientific symbol → meaning.
@@ -436,7 +648,7 @@ export default  function ResultScreen({ name, onBack }) {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
