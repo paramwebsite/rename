@@ -16,8 +16,9 @@ import Display7 from './pages/App_7/Display7'
 import Display8 from './pages/App_8/Display8'
 import Display9 from './pages/App_9/Display9'
 import Display10 from './pages/App_10/Display10'
-import Display11 from './pages/App_11/Display11'
+
 import Display12 from './pages/App_12/Display12'
+import Display11 from './pages/App_11/Display11'
 
 
 

@@ -610,7 +610,7 @@ async function tryTransliterate(text, itc) {
 const Display10 = () => {
   const ws = useMemo(() => getWS(), []);
 
-  const [text, setText] = useState("Param");
+  const [text, setText] = useState("");
   const [results, setResults] = useState([]);
   const [active, setActive] = useState([]);
 
@@ -726,7 +726,7 @@ const Display10 = () => {
         justifyContent: "center",
       }}
     >
-      <div
+     {text?( <div
         style={{
           aspectRatio: "2/3",
           width: "100%",
@@ -766,7 +766,19 @@ const Display10 = () => {
             );
           })}
         </div>
-      </div>
+      </div>):
+     ( <div
+        style={{
+          aspectRatio: "2/3",
+          width: "100%",
+          maxWidth: "100vw",
+          maxHeight: "100vh",
+          backgroundImage:"url(src/assets/glitch.gif)",
+          objectFit:"contain"
+        }}
+      >
+        
+      </div>)}
     </div>
   );
 };

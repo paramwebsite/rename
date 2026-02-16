@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getWS, sendJSON } from "../../utils/ws";
 import { LetterImage } from "./component/LetterImage";
-import lettersData from "./data/letters.json";
 
-const DEFAULT_NAME = "PARAM";
-const MAX_CHARS = 25;
+import { generateLettersForName } from "./utils/utils";
+
+const DEFAULT_NAME = "";
+
 const displayId = 4;
 
 const Display4 = () => {
@@ -13,34 +14,11 @@ const Display4 = () => {
   const [displayName, setDisplayName] = useState("");
   const [selectedLetters, setSelectedLetters] = useState([]);
   const [error, setError] = useState("");
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   /* ------------------ Letter helpers Start------------------ */
-  const getRandomLetterData = useCallback((letter, data) => {
-    if (letter === " ") return null;
-    const letterOptions = data[letter];
-    if (!letterOptions) return null;
-    return letterOptions[Math.floor(Math.random() * letterOptions.length)];
-  }, []);
 
-  const generateLettersForName = useCallback(
-    (inputName) => {
-      const letters = inputName.toUpperCase().slice(0, MAX_CHARS).split("");
-      const invalidLetters = letters.filter(
-        (letter) => letter !== " " && !lettersData[letter]
-      );
 
-      if (invalidLetters.length > 0) {
-        setError(
-          "Some characters in your name are not available in the Landsat database."
-        );
-        return null;
-      }
-
-      return letters.map((letter) => getRandomLetterData(letter, lettersData));
-    },
-    [getRandomLetterData]
-  );
+ 
 
   /* ------------------ Letter helpers End------------------ */
 
@@ -51,7 +29,6 @@ const Display4 = () => {
     if (defaultLetters) {
       setSelectedLetters(defaultLetters);
       setDisplayName(DEFAULT_NAME);
-      setIsInitialLoad(true);
       setError("");
     }
   }, [generateLettersForName]);
@@ -71,7 +48,6 @@ const Display4 = () => {
       if (newLetters) {
         setSelectedLetters(newLetters);
         setDisplayName(incomingName);
-        setIsInitialLoad(false);
       }
     },
     [generateLettersForName]
@@ -143,7 +119,8 @@ const Display4 = () => {
   return (
     <div className="w-screen h-screen bg-transparent flex items-center justify-center">
       {/* 11:2 kiosk canvas */}
-      <div
+
+    {displayName?(<div
         ref={containerRef}
         className="
           aspect-[11/2]
@@ -170,7 +147,21 @@ const Display4 = () => {
             isSpace={!letterData}
           />
         ))}
-      </div>
+      </div>):(<div
+        ref={containerRef}
+        className="
+          aspect-[11/2]
+          w-full
+          max-h-full
+          bg-contain
+          overflow-hidden
+        "
+        style={{ backgroundImage: "url(src/pages/App_11/assets/glitch.gif)" }}
+      >
+       
+      </div>)}
+
+      
     </div>
   );
 };

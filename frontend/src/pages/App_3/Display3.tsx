@@ -37,7 +37,7 @@ const Display3: React.FC = () => {
       sendJSON(ws, { type: "registerDisplay", displayId });
     };
 
-    const onMessage = (event:any) => {
+    const onMessage = (event: any) => {
       let msg;
       try {
         msg = JSON.parse(event.data);
@@ -68,7 +68,7 @@ const Display3: React.FC = () => {
     };
   }, [ws]);
 
-  const handleSubmit = (value:string) => {
+  const handleSubmit = (value: string) => {
     if (value.trim() && !isLoading) {
       handleSearch(value);
     }
@@ -137,9 +137,9 @@ const Display3: React.FC = () => {
   const mapLoading = isLoading || isPending;
 
   return (
-    <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-black text-[#5d4037] overflow-x-hidden font-imfell">
-
-      <div className="w-full flex flex-col space-y-8">
+    <main className="min-h-screen w-full flex flex-col items-center justify-center  bg-black text-[#5d4037] overflow-x-hidden font-imfell">
+      {name?(
+      <div className="w-full flex flex-col space-y-8 ">
         <section className="w-full flex justify-center">
           <Suspense
             fallback={
@@ -177,6 +177,10 @@ const Display3: React.FC = () => {
           <NameInput onSearch={handleSearch} isLoading={mapLoading} />
         </section> */}
       </div>
+      ):(
+      <div className=" relative w-full aspect-[2/1]   shadow-2xl overflow-hidden antique-texture"
+      style={{ backgroundImage: "url(src/assets/glitch.gif)" }}></div>
+      )}
     </main>
   );
 };
