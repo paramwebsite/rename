@@ -148,7 +148,7 @@ const nameRouter = require("./routes/name");
 // -----------------------------------
 // Boot
 // -----------------------------------
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 async function start() {
   // 1) Connect databases
@@ -277,11 +277,18 @@ async function start() {
   //     console.log("🔴 Client disconnected:", socket.id);
   //   });
   // });
-  wss.on("connection", (ws) => {
-    // console.log("🟢 WS client connected", displayId );
+  wss.on("connection", (ws, req) => {
+
+    const ip = req.socket.remoteAddress;
+    const url = req.url;
+
+    console.log("🟢 WS client connected");
+    console.log(`   from IP: ${ip}`);
+    console.log(`   URL: ${url}`);
+
 
     ws.meta = { role: null, displayId: null };
-    
+
     ws.on("message", (raw) => {
       let msg;
       try {
@@ -334,6 +341,8 @@ async function start() {
         return;
       }
 
+
+
       // 4️⃣ Clear displays
       if (msg.type === "ClearDisplays") {
         broadcastToDisplays({ type: "resetDisplay" });
@@ -351,6 +360,15 @@ async function start() {
     });
   });
 
+  // Log WS status every 10 seconds
+  setInterval(() => {
+    console.log(
+      "📡 WS status →",
+      "displays:", displays.size,
+      "dashboards:", dashboards.size,
+      "touchdesigners:", touchDesigners.size
+    );
+  }, 60000);
 
   // 8) Start the RFID change-stream watcher
   // This should keep emitting `card-detected` / `card-lifted` to all sockets

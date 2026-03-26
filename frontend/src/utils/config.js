@@ -5,7 +5,7 @@
 
 // // WebSocket base
 // export const WS_URL = SERVER_URL.replace("http", "ws");
-const SERVER_URL = (import.meta.env.VITE_SERVER_URL || "http://localhost:3001")
+const SERVER_URL = (import.meta.env.VITE_SERVER_URL || "http://localhost:3000")
   .replace(/\/+$/, ""); // strip trailing slash
 
 // HTTP base for REST and Socket.IO
@@ -17,4 +17,4 @@ export const WS_URL = SERVER_URL.startsWith("https")
   : SERVER_URL.replace("http", "ws");
 
 // Common socket.io options (forces ws transport, avoids polling)
-export const SOCKET_OPTIONS = { transports: ["websocket"] };
+// export const SOCKET_OPTIONS = { transports: ["websocket"] };
