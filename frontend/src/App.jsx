@@ -3,20 +3,23 @@ import { BrowserRouter, Routes,Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import HomePage from './pages/HomePage'
 import PageNotFound from './pages/PageNotFound'
+
+
+
+import Display1 from './pages/App_1/Display1'
+import Display2 from './pages/App_2/Display2'
+import Display3 from './pages/App_3/Display3'
 import Display4 from './pages/App_4/Display4'
+import Display5 from './pages/App_5/Display5'
+import Display6 from './pages/App_6/Display6'
+import Display7 from './pages/App_7/Display7'
 import Display8 from './pages/App_8/Display8'
+import Display9 from './pages/App_9/Display9'
 import Display10 from './pages/App_10/Display10'
 
+import Display12 from './pages/App_12/Display12'
+import Display11 from './pages/App_11/Display11'
 
-import Display1 from './pages/Display1'
-import Display5 from './pages/Display5'
-import Display6 from './pages/Display6'
-import Display7 from './pages/Display7'
-import Display2 from './pages/Display2'
-import Display9 from './pages/Display9'
-import Display3 from './pages/Display3'
-import Display11 from './pages/Display11'
-import Display12 from './pages/Display12'
 
 
 const App = () => {

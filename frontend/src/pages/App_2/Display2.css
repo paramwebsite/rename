@@ -1,0 +1,8 @@
+@font-face {
+  font-family: "Megazoid";
+  src: url("/App_2/megazoid-font/MegazoidLayersRight-Regular.ttf") format("truetype");
+}
+
+svg text {
+  font-family: "Megazoid";
+}
