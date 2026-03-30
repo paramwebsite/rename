@@ -1,413 +1,34 @@
-// import React, { useCallback, useEffect, useState } from 'react'
-// import { io } from "socket.io-client";
-// import { API_URL, WS_URL } from "../../utils/config";
-// import { LetterImage } from './component/LetterImage';
-// import lettersData from './data/letters.json';
-
-
-
-// const DEFAULT_NAME = 'PARAM';
-// const INACTIVITY_TIMEOUT = 45000; // 45 seconds
-// const PAGE_INACTIVITY_TIMEOUT = 90000; // 90 seconds
-// const MAX_CHARS = 25;
-
-// const displayId = 1;
-
-// const Display1 = () => {
-
-
-
-
-//   const [showStart, setShowStart] = useState(true);
-//   const [name, setName] = useState('');
-//   const [displayName, setDisplayName] = useState('');
-//   const [selectedLetters, setSelectedLetters] = useState([]);
-//   const [error, setError] = useState('');
-//   const [lastActivity, setLastActivity] = useState(Date.now());
-//   const [lastPageActivity, setLastPageActivity] = useState(Date.now());
-//   const [isInitialLoad, setIsInitialLoad] = useState(true);
-//   const [isNSFW, setIsNSFW] = useState(false);
-
-//   const getRandomLetterData = useCallback((letter, data) => {
-//     if (letter === ' ') return null;
-//     const letterOptions = data[letter];
-//     if (!letterOptions) return null;
-//     return letterOptions[Math.floor(Math.random() * letterOptions.length)];
-//   }, []);
-
-
-
-//   const generateLettersForName = useCallback((inputName) => {
-//     const letters = inputName.toUpperCase().split('');
-//     const invalidLetters = letters.filter(letter => letter !== ' ' && !lettersData[letter]);
-
-//     if (invalidLetters.length > 0) {
-//       setError("Some characters in your name are not available in the Landsat database.");
-//       return null;
-//     }
-
-//     return letters.map(letter => getRandomLetterData(letter, lettersData));
-//   }, [getRandomLetterData]);
-
-
-
-//   const handleSubmit = (name) => {
-
-//     console.log("inside handlesubmit", name);
-//     const newLetters = generateLettersForName(name);
-
-//     console.log("handleSubmit:", newLetters);
-//     if (newLetters) {
-//       setSelectedLetters(newLetters);
-//       setDisplayName(name);
-//       setLastActivity(Date.now());
-//       setLastPageActivity(Date.now());
-//       setIsInitialLoad(false);
-//     }
-//   };
-
-
-//   const resetToDefault = useCallback(() => {
-//     setName('');
-//     const defaultLetters = generateLettersForName(DEFAULT_NAME);
-//     if (defaultLetters) {
-//       setSelectedLetters(defaultLetters);
-//       setDisplayName(DEFAULT_NAME);
-//       setIsInitialLoad(true);
-//     }
-//   }, [generateLettersForName]);
-
-//   useEffect(() => {
-//     resetToDefault();
-//   }, [resetToDefault]);
-
-
-
-
-//   useEffect(() => {
-//     // connect socket
-//     const socket = io(API_URL);
-
-//     // register this display
-//     socket.emit("registerDisplay", displayId);
-
-//     socket.on("newName", (data) => {
-//       console.log("Received new name:", data.name);
-//       setName(data.name);
-//       handleSubmit(data.name);
-//     });
-
-//     return () => socket.disconnect();
-//   }, [])
-
-//   useEffect(() => {
-//     console.log("selectedLetters:", selectedLetters);
-//   }, [selectedLetters])
-
-
-
-
-
-
-
-
-
-
-
-//   return (
-//     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#0B1026] via-[#1B2A4A] to-[#162B46]">
-//       <div className="star-field" />
-//       <div className="container relative mx-auto px-4 py-8">
-//         {/* Header */}
-//         <div className="text-center mb-12 animate-fadeIn">
-//           <div className="inline-flex items-center justify-center gap-4 mb-6">
-//             {/* <Satellite className="w-12 h-12 text-blue-400 animate-float" /> */}
-//             {/* <Globe2 className="w-16 h-16 text-blue-300 animate-float" style={{ animationDelay: '1s' }} /> */}
-//             {/* <Rocket className="w-12 h-12 text-blue-400 animate-float" style={{ animationDelay: '2s' }} /> */}
-//           </div>
-//           <div className="flex items-center justify-center gap-4 mb-6">
-//             <h1 className="text-6xl leading-[3] font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-100 to-blue-300">
-//               India's Sky Signature
-//             </h1>
-
-//           </div>
-//           <p className="text-blue-200 text-lg max-w-2xl mx-auto leading-relaxed">
-//             Experience India's beauty from space as your name comes to life through carefully curated Landsat satellite imagery
-//           </p>
-//         </div>
-
-//         {/* Image Display */}
-//         <div className="mb-12 relative">
-//           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1B2A4A]/50 to-transparent pointer-events-none" />
-//           <div className="flex flex-wrap justify-center gap-2">
-//             {selectedLetters.map((letterData, index) => (
-//               letterData ? (
-
-
-//                 <LetterImage
-//                   key={`${displayName}-${index}`}
-//                   data={letterData}
-//                   totalLetters={selectedLetters.length}
-//                   index={index}
-//                 />
-
-
-
-//               ) : (
-//                 <LetterImage
-//                   key={`${displayName}-space-${index}`}
-//                   data={{
-//                     location: '',
-//                     coordinates: '',
-//                     image: ''
-//                   }}
-//                   totalLetters={selectedLetters.length}
-//                   index={index}
-//                   isSpace={true}
-//                 />
-//               )
-//             ))}
-
-
-//           </div>
-//         </div>
-
-
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default Display1
-
-// import React, { useCallback, useEffect, useMemo, useState } from "react";
-// import { getWS, sendJSON } from "../../utils/ws";
-// import { LetterImage } from "./component/LetterImage";
-// import lettersData from "./data/letters.json";
-
-// const DEFAULT_NAME = "PARAM";
-// const MAX_CHARS = 25;
-// const displayId = 4;
-
-// const Display4 = () => {
-//   const ws = useMemo(() => getWS(), []);
-
-//   const [name, setName] = useState("");
-//   const [displayName, setDisplayName] = useState("");
-//   const [selectedLetters, setSelectedLetters] = useState([]);
-//   const [error, setError] = useState("");
-//   const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-//   const getRandomLetterData = useCallback((letter, data) => {
-//     if (letter === " ") return null;
-//     const letterOptions = data[letter];
-//     if (!letterOptions) return null;
-//     return letterOptions[Math.floor(Math.random() * letterOptions.length)];
-//   }, []);
-
-//   const generateLettersForName = useCallback(
-//     (inputName) => {
-//       const letters = inputName.toUpperCase().slice(0, MAX_CHARS).split("");
-//       const invalidLetters = letters.filter(
-//         (letter) => letter !== " " && !lettersData[letter]
-//       );
-
-//       if (invalidLetters.length > 0) {
-//         setError("Some characters in your name are not available in the Landsat database.");
-//         return null;
-//       }
-
-//       return letters.map((letter) => getRandomLetterData(letter, lettersData));
-//     },
-//     [getRandomLetterData]
-//   );
-
-//   const handleSubmit = useCallback(
-//     (incomingName) => {
-//       const newLetters = generateLettersForName(incomingName);
-//       if (newLetters) {
-//         setSelectedLetters(newLetters);
-//         setDisplayName(incomingName);
-//         setIsInitialLoad(false);
-//       }
-//     },
-//     [generateLettersForName]
-//   );
-
-//   const resetToDefault = useCallback(() => {
-//     setName("");
-//     const defaultLetters = generateLettersForName(DEFAULT_NAME);
-//     if (defaultLetters) {
-//       setSelectedLetters(defaultLetters);
-//       setDisplayName(DEFAULT_NAME);
-//       setIsInitialLoad(true);
-//       setError("");
-//     }
-//   }, [generateLettersForName]);
-
-//   useEffect(() => {
-//     resetToDefault();
-//   }, [resetToDefault]);
-
-//   // WS register + listeners
-//   useEffect(() => {
-//     const onOpen = () => {
-//       // register this display
-//       sendJSON(ws, { type: "registerDisplay", displayId });
-//     };
-
-//     const onMessage = (event) => {
-//       let msg;
-//       try {
-//         msg = JSON.parse(event.data);
-//       } catch {
-//         return;
-//       }
-
-//       if (msg.type === "newName") {
-//         if (!msg?.name) return;
-//         setName(msg.name);
-//         handleSubmit(msg.name);
-//         return;
-//       }
-
-//       if (msg.type === "resetDisplay") {
-//         resetToDefault();
-//         return;
-//       }
-//     };
-
-//     if (ws.readyState === WebSocket.OPEN) onOpen();
-//     else ws.addEventListener("open", onOpen);
-
-//     ws.addEventListener("message", onMessage);
-
-//     return () => {
-//       ws.removeEventListener("open", onOpen);
-//       ws.removeEventListener("message", onMessage);
-//       // don't close singleton
-//     };
-//   }, [ws, handleSubmit, resetToDefault]);
-
-//   return (
-//     <div className="h-screen w-screen bg-black flex items-center justify-center">
-//       <div className="aspect-[5.5/1] h-full max-w-screen overflow-hidden relative">
-//         <div className="relative min-h-full overflow-hidden bg-gradient-to-br from-[#0B1026] via-[#1B2A4A] to-[#162B46]">
-//           <div className="star-field" />
-//           <div className="container relative mx-auto px-4 py-8">
-//             <div className="text-center mb-12 animate-fadeIn">
-//               <div className="flex items-center justify-center gap-4 mb-6">
-//                 <h1 className="text-6xl leading-[3] font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-100 to-blue-300">
-//                   India's Sky Signature
-//                 </h1>
-//               </div>
-
-//               <p className="text-blue-200 text-lg max-w-2xl mx-auto leading-relaxed">
-//                 Experience India's beauty from space as your name comes to life through carefully curated
-//                 Landsat satellite imagery
-//               </p>
-
-//               {error && (
-//                 <p className="mt-3 text-red-400 text-sm max-w-2xl mx-auto">
-//                   {error}
-//                 </p>
-//               )}
-//             </div>
-
-//             <div className="mb-12 relative">
-//               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1B2A4A]/50 to-transparent pointer-events-none" />
-//               <div className="flex flex-wrap justify-center gap-2">
-//                 {selectedLetters.map((letterData, index) =>
-//                   letterData ? (
-//                     <LetterImage
-//                       key={`${displayName}-${index}`}
-//                       data={letterData}
-//                       totalLetters={selectedLetters.length}
-//                       index={index}
-//                     />
-//                   ) : (
-//                     <LetterImage
-//                       key={`${displayName}-space-${index}`}
-//                       data={{ location: "", coordinates: "", image: "" }}
-//                       totalLetters={selectedLetters.length}
-//                       index={index}
-//                       isSpace
-//                     />
-//                   )
-//                 )}
-//               </div>
-//             </div>
-
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Display4;
-
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getWS, sendJSON } from "../../utils/ws";
 import { LetterImage } from "./component/LetterImage";
-import lettersData from "./data/letters.json";
 
-const DEFAULT_NAME = "PARAM";
-const MAX_CHARS = 25;
+import { generateLettersForName } from "./utils/utils";
+
+const DEFAULT_NAME = "";
+
 const displayId = 4;
 
 const Display4 = () => {
   const ws = useMemo(() => getWS(), []);
 
-  const [name, setName] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [selectedLetters, setSelectedLetters] = useState([]);
   const [error, setError] = useState("");
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const getRandomLetterData = useCallback((letter, data) => {
-    if (letter === " ") return null;
-    const letterOptions = data[letter];
-    if (!letterOptions) return null;
-    return letterOptions[Math.floor(Math.random() * letterOptions.length)];
-  }, []);
+  /* ------------------ Letter helpers Start------------------ */
 
-  const generateLettersForName = useCallback(
-    (inputName) => {
-      const letters = inputName.toUpperCase().slice(0, MAX_CHARS).split("");
-      const invalidLetters = letters.filter(
-        (letter) => letter !== " " && !lettersData[letter]
-      );
 
-      if (invalidLetters.length > 0) {
-        setError("Some characters in your name are not available in the Landsat database.");
-        return null;
-      }
+ 
 
-      return letters.map((letter) => getRandomLetterData(letter, lettersData));
-    },
-    [getRandomLetterData]
-  );
+  /* ------------------ Letter helpers End------------------ */
 
-  const handleSubmit = useCallback(
-    (incomingName) => {
-      const newLetters = generateLettersForName(incomingName);
-      if (newLetters) {
-        setSelectedLetters(newLetters);
-        setDisplayName(incomingName);
-        setIsInitialLoad(false);
-      }
-    },
-    [generateLettersForName]
-  );
+  /* ------------------ Default Start------------------ */
 
   const resetToDefault = useCallback(() => {
-    setName("");
     const defaultLetters = generateLettersForName(DEFAULT_NAME);
     if (defaultLetters) {
       setSelectedLetters(defaultLetters);
       setDisplayName(DEFAULT_NAME);
-      setIsInitialLoad(true);
       setError("");
     }
   }, [generateLettersForName]);
@@ -416,7 +37,22 @@ const Display4 = () => {
     resetToDefault();
   }, [resetToDefault]);
 
+  /* ------------------ Default End------------------ */
+
+  /* ------------------ Socket Start ------------------ */
   // WS register + listeners
+
+  const handleSubmit = useCallback(
+    (incomingName) => {
+      const newLetters = generateLettersForName(incomingName);
+      if (newLetters) {
+        setSelectedLetters(newLetters);
+        setDisplayName(incomingName);
+      }
+    },
+    [generateLettersForName]
+  );
+
   useEffect(() => {
     const onOpen = () => {
       // register this display
@@ -433,7 +69,6 @@ const Display4 = () => {
 
       if (msg.type === "newName") {
         if (!msg?.name) return;
-        setName(msg.name);
         handleSubmit(msg.name);
         return;
       }
@@ -456,58 +91,77 @@ const Display4 = () => {
     };
   }, [ws, handleSubmit, resetToDefault]);
 
+  /* ------------------ Socket End------------------ */
+
+  /* ------------------ Observe 11:2 Start ------------------ */
+
+  const containerRef = useRef(null);
+
+  const [containerSize, setContainerSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setContainerSize({ width, height });
+    });
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  /* ------------------ Observe 11:2 End ------------------ */
+
   return (
-    <div className="h-screen w-screen bg-black flex items-center justify-center">
-      <div className="aspect-[5.5/1] h-full max-w-screen overflow-hidden relative">
-        <div className="relative min-h-full overflow-hidden bg-gradient-to-br from-[#0B1026] via-[#1B2A4A] to-[#162B46]">
-          <div className="star-field" />
-          <div className="container relative mx-auto px-4 py-8">
-            <div className="text-center mb-12 animate-fadeIn">
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <h1 className="text-6xl leading-[3] font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-100 to-blue-300">
-                  India's Sky Signature
-                </h1>
-              </div>
+    <div className="w-screen h-screen bg-transparent flex items-center justify-center">
+      {/* 11:2 kiosk canvas */}
 
-              <p className="text-blue-200 text-lg max-w-2xl mx-auto leading-relaxed">
-                Experience India's beauty from space as your name comes to life through carefully curated
-                Landsat satellite imagery
-              </p>
+    {displayName?(<div
+        ref={containerRef}
+        className="
+          aspect-[11/2]
+          w-full
+          max-h-full
+          flex
+          items-center
+          justify-center
+          gap-[1%]
+          bg-[url('src/pages/App_4/assets/Images/background/BGForLandSat.png')]
+          bg-contain
+          bg-no-repeat
+          overflow-hidden
+        "
+      >
+        {selectedLetters.map((letterData, index) => (
+          <LetterImage
+            key={`${displayName}-${index}`}
+            data={letterData}
+            index={index}
+            totalLetters={selectedLetters.length}
+            containerWidth={containerSize.width}
+            containerHeight={containerSize.height}
+            isSpace={!letterData}
+          />
+        ))}
+      </div>):(<div
+        ref={containerRef}
+        className="
+          aspect-[11/2]
+          w-full
+          max-h-full
+          bg-contain
+          overflow-hidden
+        "
+        style={{ backgroundImage: "url(src/pages/App_11/assets/glitch.gif)" }}
+      >
+       
+      </div>)}
 
-              {error && (
-                <p className="mt-3 text-red-400 text-sm max-w-2xl mx-auto">
-                  {error}
-                </p>
-              )}
-            </div>
-
-            <div className="mb-12 relative">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1B2A4A]/50 to-transparent pointer-events-none" />
-              <div className="flex flex-wrap justify-center gap-2">
-                {selectedLetters.map((letterData, index) =>
-                  letterData ? (
-                    <LetterImage
-                      key={`${displayName}-${index}`}
-                      data={letterData}
-                      totalLetters={selectedLetters.length}
-                      index={index}
-                    />
-                  ) : (
-                    <LetterImage
-                      key={`${displayName}-space-${index}`}
-                      data={{ location: "", coordinates: "", image: "" }}
-                      totalLetters={selectedLetters.length}
-                      index={index}
-                      isSpace
-                    />
-                  )
-                )}
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 };
