@@ -125,6 +125,7 @@ const require = createRequire(import.meta.url);
 
 // --- RFID stack (ESM) ---
 import connectDB from "./db.js";                       // RFID DB (mongoose) connector
+import healthRoute from "./routes/healthRoute.js"; // health route
 import startEventWatcher from "./changeStream.js";     // RFID change stream -> emits socket events
 import cardRoutes from "./routes/cardRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
@@ -224,6 +225,8 @@ async function start() {
   app.use("/name", nameRouter);
   // app.use("/image",    getImageRouter);
 
+  // 6.1) Health route
+  app.use("/health", healthRoute);
   app.get("/", (_req, res) => res.send("Unified server running"));
 
   // 7) Socket.IO events
