@@ -144,6 +144,7 @@ const { initDB } = require("./Database/db");           // your app DB (whatever 
 const displayRoutes = require("./routes/displays");
 // const videoStreamRoutes = require("./routes/videoStream");
 const nameRouter = require("./routes/name");
+const display11NameRouter = require("./routes/nameRoute.js");
 // const getImageRouter  = require("./routes/getImage");
 
 // -----------------------------------
@@ -228,6 +229,8 @@ async function start() {
   // app.use("/video",    videoStreamRoutes);
   app.use("/name", nameRouter);
   // app.use("/image",    getImageRouter);
+
+  app.use('/display11/name', display11NameRouter);
 
   // 6.1) Health route
   app.use("/health", healthRoute);
