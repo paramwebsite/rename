@@ -81,17 +81,28 @@ export default function ResultScreen({ name, onBack }) {
 
       let xPercent;
 
-      // If last row is incomplete → center items
+      // // If last row is incomplete → center items
+      // if (isLastRow && itemsInLastRow < COLS) {
+      //   if (itemsInLastRow === 1) {
+      //     xPercent = 50; // center
+      //   } else if (itemsInLastRow === 2) {
+      //     // place between col1-col2 and col2-col3
+      //     xPercent = col === 0 ? 33 : 66;
+      //   }
+      // } else {
+      //   // Normal 3 column layout
+      //   xPercent = (col + 1) * (100 / (COLS + 1));
+      // }
+
       if (isLastRow && itemsInLastRow < COLS) {
         if (itemsInLastRow === 1) {
-          xPercent = 50; // center
+          xPercent = 50;
         } else if (itemsInLastRow === 2) {
-          // place between col1-col2 and col2-col3
-          xPercent = col === 0 ? 33 : 66;
+          xPercent = col === 0 ? 28 : 72;
         }
       } else {
-        // Normal 3 column layout
-        xPercent = (col + 1) * (100 / (COLS + 1));
+        const colPositions = [18, 50, 82];
+        xPercent = colPositions[col];
       }
 
       // const yPercent = (row + 1) * (100 / (rows + 1));
@@ -127,11 +138,23 @@ export default function ResultScreen({ name, onBack }) {
           {letters.map(
             (char, i) =>
               letterMap[char] && (
+                // <img
+                //   key={i}
+                //   src={letterMap[char]}
+                //   alt={char}
+                //   className="pointer-events-none absolute w-[32%] max-w-[160px]"
+                //   style={{
+                //     left: `${positions[i].x}%`,
+                //     top: `${positions[i].y}%`,
+                //     transform: "translate(-50%, -50%)",
+                //   }}
+                //   draggable={false}
+                // />
                 <img
                   key={i}
                   src={letterMap[char]}
                   alt={char}
-                  className="pointer-events-none absolute w-[32%] max-w-[160px]"
+                  className="pointer-events-none absolute w-[60%] max-w-[500px]"
                   style={{
                     left: `${positions[i].x}%`,
                     top: `${positions[i].y}%`,
