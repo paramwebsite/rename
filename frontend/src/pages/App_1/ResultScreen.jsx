@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 const PATTERNS = [
   {
@@ -578,77 +579,316 @@ function compileNameToFormula(nameRaw) {
   return { cleaned, formula: pretty, interpretations };
 }
 
-export default function ResultScreen({ name, onBack }) {
-  const compiled = useMemo(() => compileNameToFormula(name), [name]);
-  const chalkLines = [compiled.formula];
-  const [done, setDone] = useState(false);
+
+
+
+
+
+
+
+function ChalkFormula({ text, onComplete, onDustCreated }) {
+  const [visibleChars, setVisibleChars] = useState(0);
+  const [dust, setDust] = useState([]);
+  const [chalkPos, setChalkPos] = useState({ x: 0, y: 0 });
+  const [isScribbling, setIsScribbling] = useState(false);
+
+  const dustIdCounter = useRef(0);
+  const rafRef = useRef(null);
+
+  useEffect(() => {
+    let current = 0;
+    let mounted = true;
+    let dustInterval;
+    let nextCharTimeout;
+    let completionTimeout;
+
+    setVisibleChars(0);
+    setDust([]);
+    setIsScribbling(false);
+    setChalkPos({ x: 0, y: 0 });
+
+    const writeNextChar = async () => {
+      if (!mounted) return;
+
+      if (current >= text.length) {
+        completionTimeout = setTimeout(() => {
+          if (mounted) onComplete?.();
+        }, 500);
+        return;
+      }
+
+      const char = text[current];
+
+      if (char === " ") {
+        current += 1;
+        setVisibleChars(current);
+        setChalkPos({ x: 0, y: 0 });
+        nextCharTimeout = setTimeout(writeNextChar, 50);
+        return;
+      }
+
+      setIsScribbling(true);
+      setVisibleChars(current + 1);
+
+      const traceDuration = 180 + Math.random() * 180;
+      const startTime = performance.now();
+
+      dustInterval = setInterval(() => {
+        const id = dustIdCounter.current++;
+        const isLarge = Math.random() > 0.88;
+        const dustX = Math.random() * 20 - 10;
+
+        setDust((prev) => [
+          ...prev,
+          {
+            id,
+            x: dustX,
+            y: Math.random() * 10 - 5,
+            size: isLarge ? 4 : 2,
+            duration: isLarge ? 1800 : 1200,
+          },
+        ]);
+
+        onDustCreated?.(((current + 0.5) / Math.max(text.length, 1)) * 100);
+
+        setTimeout(() => {
+          setDust((prev) => prev.filter((d) => d.id !== id));
+        }, isLarge ? 1800 : 1200);
+      }, 22);
+
+      const animateChalk = () => {
+        if (!mounted) return;
+
+        const elapsed = performance.now() - startTime;
+        if (elapsed < traceDuration) {
+          const progress = elapsed / traceDuration;
+          const angle = progress * Math.PI * 6;
+
+          setChalkPos({
+            x: Math.sin(angle) * 12 + (Math.random() * 3 - 1.5),
+            y: Math.cos(angle * 1.15) * 16 + (Math.random() * 3 - 1.5),
+          });
+
+          rafRef.current = requestAnimationFrame(animateChalk);
+        }
+      };
+
+      animateChalk();
+
+      await new Promise((resolve) => setTimeout(resolve, traceDuration));
+
+      if (!mounted) return;
+
+      clearInterval(dustInterval);
+      setIsScribbling(false);
+      current += 1;
+
+      nextCharTimeout = setTimeout(writeNextChar, 30 + Math.random() * 70);
+    };
+
+    writeNextChar();
+
+    return () => {
+      mounted = false;
+      clearInterval(dustInterval);
+      clearTimeout(nextCharTimeout);
+      clearTimeout(completionTimeout);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [text, onComplete, onDustCreated]);
 
   return (
-    <div className="min-h-screen w-full bg-[radial-gradient(1200px_700px_at_30%_20%,#1a1f2b,#0b0f16)] px-[18px] py-[18px] font-sans text-[#eaf0ff] flex items-center justify-center">
-      <div className="w-[min(980px,96vw)] flex flex-col gap-3.5">
-        <div className="flex items-center justify-between gap-2.5 px-1 py-2">
-          {/* <button
-            onClick={onBack}
-            className="rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 font-bold text-white hover:bg-white/10 active:bg-white/5"
+    <div className="relative flex w-full flex-wrap items-center justify-center gap-y-2 py-4">
+      {text.split("").map((char, idx) => (
+        <div
+          key={`${char}-${idx}`}
+          className="relative inline-flex h-[64px] w-[26px] items-center justify-center md:h-[88px] md:w-[34px] lg:h-[100px] lg:w-[40px]"
+        >
+          <motion.span
+            initial={{
+              opacity: 0,
+              filter: "blur(4px) brightness(2)",
+              clipPath: "inset(0 100% 0 0)",
+            }}
+            animate={{
+              opacity: idx < visibleChars ? 1 : 0,
+              filter:
+                idx < visibleChars
+                  ? "blur(0px) brightness(1)"
+                  : "blur(4px) brightness(2)",
+              clipPath:
+                idx < visibleChars
+                  ? "inset(0 0% 0 0)"
+                  : "inset(0 100% 0 0)",
+            }}
+            transition={{
+              duration: 0.35,
+              ease: "linear",
+              opacity: { duration: 0.08 },
+            }}
+            style={{ filter: "url(#chalk-stroke)" }}
+            className="font-chalk chalk-text whitespace-pre inline-block text-3xl text-white/90 drop-shadow-[0_0_1px_rgba(255,255,255,0.25)] md:text-5xl lg:text-6xl"
           >
-            ← Back
-          </button> */}
+            {char}
+          </motion.span>
 
-          {/* <div className="font-bold opacity-85">
-            Result for: <span className="opacity-100">{name}</span>
-          </div> */}
-
-          <div className="w-[88px]" />
-        </div>
-
-        <div className="relative mx-auto aspect-square w-[min(80vmin,720px)] overflow-hidden rounded-[18px] border-[6px] border-[#5b3a1e] shadow-[0_25px_80px_rgba(0,0,0,0.6)] bg-[#1f4f2f] bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.05),transparent_40%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.04),transparent_45%)]">
-          <div className="absolute inset-0 p-[60px]">
-            <ChalkCanvas
-              textLines={chalkLines}
-              isActive={true}
-              onDone={() => {
-                setDone(true);
+          {idx === visibleChars - 1 && isScribbling && (
+            <motion.div
+              animate={{
+                opacity: [0.18, 0.42, 0.18],
+                scale: [0.75, 1.25, 0.75],
+                rotate: [0, 50, 90, 130],
               }}
+              transition={{ repeat: Infinity, duration: 0.12 }}
+              className="pointer-events-none absolute inset-0 z-10 rounded-full bg-white/20 blur-2xl"
             />
-          </div>
+          )}
 
-          {/* Kept behavior (done) even though footer is commented out in original */}
-          <span className="sr-only">
-            {done ? "Chalk complete." : "Writing…"}
-          </span>
+          {idx === visibleChars - 1 && isScribbling && (
+            <motion.div
+              className="absolute z-30 h-12 w-4 rounded-sm bg-white/95 shadow-[0_0_28px_rgba(255,255,255,0.65)] md:h-14 md:w-5"
+              style={{
+                left: `calc(50% + ${chalkPos.x}px)`,
+                top: `calc(50% + ${chalkPos.y}px)`,
+                transform: "translate(-50%, -50%)",
+              }}
+              animate={{
+                rotate: [22, 42, 18, 32],
+                scaleY: [1, 0.85, 1.12, 1],
+                x: [0, 2, -2, 0],
+                y: [0, -2, 2, 0],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.07,
+                ease: "linear",
+              }}
+            >
+              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent opacity-100 blur-[2px]" />
+            </motion.div>
+          )}
+
+          {idx === visibleChars - 1 && isScribbling && (
+            <AnimatePresence>
+              {dust.map((d) => (
+                <motion.div
+                  key={d.id}
+                  initial={{ opacity: 1, y: 10, x: `calc(50% + ${d.x}px)` }}
+                  animate={{
+                    opacity: 0,
+                    y: 170,
+                    x: `calc(50% + ${d.x + (Math.random() * 70 - 35)}px)`,
+                    rotate: Math.random() * 720,
+                  }}
+                  exit={{ opacity: 0 }}
+                  style={{ width: d.size, height: d.size }}
+                  className="pointer-events-none absolute rounded-full bg-white/90 shadow-[0_0_4px_rgba(255,255,255,0.4)]"
+                />
+              ))}
+            </AnimatePresence>
+          )}
         </div>
+      ))}
+    </div>
+  );
+}
 
-        {/* <div className="mx-auto w-[min(820px,96vw)] rounded-[18px] border border-white/10 bg-white/5 p-[18px] backdrop-blur-[10px]">
-          <div className="mb-2 font-extrabold">Full interpretation</div>
-          <div className="mb-2.5 opacity-75">
-            Every matched chunk → chosen scientific symbol → meaning.
-          </div>
+export default function ResultScreen({ name, onBack }) {
+  const compiled = useMemo(() => compileNameToFormula(name), [name]);
+  const [done, setDone] = useState(false);
+  const [accumulatedDust, setAccumulatedDust] = useState([]);
 
-          <div className="mt-2.5 overflow-hidden rounded-[14px] border border-white/10">
-            <div className="grid grid-cols-[110px_200px_1fr] bg-white/10 px-3 py-2.5 text-[13px] font-extrabold">
-              <div>Chunk</div>
-              <div>Symbol</div>
-              <div>Meaning</div>
+  useEffect(() => {
+    setDone(false);
+    setAccumulatedDust([]);
+  }, [name]);
+
+  const addDust = useCallback((xPercent) => {
+    setAccumulatedDust((prev) =>
+      [
+        ...prev,
+        {
+          id: `${Date.now()}-${Math.random()}`,
+          x: xPercent,
+          opacity: Math.random() * 0.45 + 0.12,
+          scale: 0.6 + Math.random() * 0.9,
+        },
+      ].slice(-120),
+    );
+  }, []);
+
+  const handleChalkComplete = useCallback(() => {
+  setDone(true);
+}, []);
+
+  return (
+    <div className="flex min-h-screen w-full items-center justify-center bg-zinc-900 px-4 py-4 text-zinc-100">
+      <svg className="hidden">
+        <filter id="chalk-texture">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.95"
+            numOctaves="6"
+            result="noise"
+          />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" />
+        </filter>
+
+        <filter id="chalk-stroke">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.5"
+            numOctaves="4"
+            result="noise"
+          />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6" />
+          <feGaussianBlur stdDeviation="0.18" />
+        </filter>
+      </svg>
+
+      <div className="w-full max-w-6xl">
+        <div className="relative mx-auto aspect-square w-[min(88vmin,760px)]">
+          <div className="absolute -inset-5 rounded-[26px] border-[18px] border-[#3b2414] bg-[#1a100a] shadow-[0_40px_120px_rgba(0,0,0,0.75)]" />
+
+          <div
+            className="chalkboard-texture relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-[16px] border-[6px] border-[#5b3a1e] px-5 py-5 shadow-[inset_0_0_180px_rgba(0,0,0,0.55)] md:px-10 md:py-10"
+            style={{ filter: "url(#chalk-texture)" }}
+          >
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.05),transparent_35%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.03),transparent_40%)]" />
+
+            <div className="relative z-10 flex h-full w-full items-center justify-center">
+              <ChalkFormula
+                text={compiled.formula}
+              onComplete={handleChalkComplete}
+                onDustCreated={addDust}
+              />
             </div>
 
-            {compiled.interpretations.slice(0, 18).map((it, idx) => (
-              <div
-                key={idx}
-                className="grid grid-cols-[110px_200px_1fr] items-start border-t border-white/10 px-3 py-2.5 text-[13px]"
-              >
-                <div className="font-mono opacity-90">{it.chunk}</div>
-                <div className="font-mono opacity-90">{it.out}</div>
-                <div className="opacity-80">{it.desc}</div>
-              </div>
-            ))}
-
-            {compiled.interpretations.length > 18 && (
-              <div className="px-3 pb-3 pt-2 text-[12px] opacity-60">
-                (Showing first 18 chunks)
-              </div>
-            )}
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 overflow-hidden">
+              {accumulatedDust.map((d) => (
+                <div
+                  key={d.id}
+                  className="absolute bottom-0 h-12 w-16 rounded-full bg-white/20 blur-[22px]"
+                  style={{
+                    left: `calc(${d.x}% - 32px)`,
+                    opacity: d.opacity,
+                    transform: `scale(${d.scale})`,
+                  }}
+                />
+              ))}
+            </div>
           </div>
-        </div> */}
+
+          <div className="absolute -bottom-6 left-1/2 z-20 flex h-8 w-48 -translate-x-1/2 items-center justify-center gap-4 rounded-b-[2rem] border-t border-white/10 bg-[#2d1b10] shadow-2xl">
+            <div className="h-3 w-10 rotate-[22deg] rounded-sm bg-white/95" />
+            <div className="h-3 w-8 rotate-[-18deg] rounded-sm bg-white/80" />
+            <div className="h-4 w-12 rounded-sm border border-zinc-700 bg-zinc-900" />
+          </div>
+
+          <span className="sr-only">
+            {done ? "Chalk complete." : "Writing..."}
+          </span>
+        </div>
       </div>
     </div>
   );

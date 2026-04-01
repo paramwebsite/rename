@@ -118,6 +118,7 @@ const ws = useMemo(() => getWS(), []);
 
 
 
+  if (!name) return <InputScreen />;
 
 
 
