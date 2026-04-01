@@ -7,34 +7,37 @@ const displayId = 6;
 /* ---------------- UTILITIES ---------------- */
 
 function ascii(str) {
-  return str.split("").map(c => c.charCodeAt(0)).join("-");
+  return str
+    .split("")
+    .map((c) => c.charCodeAt(0))
+    .join("-");
 }
 
 function binary(str) {
   return str
     .split("")
-    .map(c => c.charCodeAt(0).toString(2).padStart(8, "0"))
+    .map((c) => c.charCodeAt(0).toString(2).padStart(8, "0"))
     .join("");
 }
 
 function hex(str) {
   return str
     .split("")
-    .map(c => c.charCodeAt(0).toString(16))
+    .map((c) => c.charCodeAt(0).toString(16))
     .join("");
 }
 
 function octal(str) {
   return str
     .split("")
-    .map(c => c.charCodeAt(0).toString(8))
+    .map((c) => c.charCodeAt(0).toString(8))
     .join("-");
 }
 
 function unicode(str) {
   return str
     .split("")
-    .map(c => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"))
+    .map((c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"))
     .join("");
 }
 
@@ -51,31 +54,103 @@ function uuidFromName(str) {
   const base = simpleHash(str).padEnd(32, "0").slice(0, 32);
   return `${base.slice(0, 8)}-${base.slice(8, 12)}-${base.slice(
     12,
-    16
+    16,
   )}-${base.slice(16, 20)}-${base.slice(20)}`;
 }
 
 /* ---------------- BACKGROUND ---------------- */
 
+// function BackgroundNoise() {
+//   const rows = 45;
+//   const cols = 180;
+
+//   const randomChar = () =>
+//     String.fromCharCode(33 + Math.floor(Math.random() * 94));
+
+//   const lines = Array.from({ length: rows }).map(() =>
+//     Array.from({ length: cols })
+//       .map(randomChar)
+//       .join("")
+//   );
+
+//   return (
+//     <div className="absolute inset-0 opacity-10 pointer-events-none select-none text-[#6bd1ff] font-mono text-[clamp(8px,0.7vw,14px)] leading-[1.1]">
+//       {lines.map((l, i) => (
+//         <div key={i}>{l}</div>
+//       ))}
+//     </div>
+//   );
+// }
+
+
+
 function BackgroundNoise() {
-  const rows = 45;
-  const cols = 180;
+  const [viewport, setViewport] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
-  const randomChar = () =>
-    String.fromCharCode(33 + Math.floor(Math.random() * 94));
+  useEffect(() => {
+    const onResize = () => {
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
 
-  const lines = Array.from({ length: rows }).map(() =>
-    Array.from({ length: cols })
-      .map(randomChar)
-      .join("")
-  );
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const fontSize = 12;
+  const lineHeight = 14;
+  const approxCharWidth = 7.2;
+
+  const rows = Math.ceil(viewport.height / lineHeight) + 30;
+  const cols = Math.ceil(viewport.width / approxCharWidth) + 40;
+
+  const lines = useMemo(() => {
+    const randomChar = () =>
+      String.fromCharCode(33 + Math.floor(Math.random() * 94));
+
+    return Array.from({ length: rows }, () =>
+      Array.from({ length: cols }, randomChar).join("")
+    );
+  }, [rows, cols]);
 
   return (
-    <div className="absolute inset-0 opacity-10 pointer-events-none select-none text-[#6bd1ff] font-mono text-[clamp(8px,0.7vw,14px)] leading-[1.1]">
-      {lines.map((l, i) => (
-        <div key={i}>{l}</div>
-      ))}
-    </div>
+    <>
+      <style>{`
+        @keyframes noiseScrollY {
+          from { transform: translateY(0); }
+          to { transform: translateY(-50%); }
+        }
+      `}</style>
+
+      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none opacity-10">
+        <div
+          className="absolute inset-0 h-[200%] w-full"
+          style={{ animation: "noiseScrollY 18s linear infinite" }}
+        >
+          {[0, 1].map((copy) => (
+            <div
+              key={copy}
+              className="h-1/2 min-w-full text-[#6bd1ff] font-mono whitespace-pre"
+              style={{
+                fontSize: `${fontSize}px`,
+                lineHeight: `${lineHeight}px`,
+              }}
+            >
+              {lines.map((line, i) => (
+                <div key={`${copy}-${i}`} className="min-w-full">
+                  {line}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -124,7 +199,10 @@ const Display6 = () => {
       hex: hex(name),
       octal: octal(name),
       unicode: unicode(name),
-      tokens: name.split("").map(c => c.toUpperCase()).join(", "),
+      tokens: name
+        .split("")
+        .map((c) => c.toUpperCase())
+        .join(", "),
     };
   }, [name]);
 
@@ -135,7 +213,8 @@ const Display6 = () => {
   }
 
   return (
-    <div className="
+    <div
+      className="
       w-screen
       h-screen
       bg-gradient-to-br
@@ -146,10 +225,12 @@ const Display6 = () => {
       font-mono
       relative
       overflow-hidden
-    ">
+    "
+    >
       <BackgroundNoise />
 
-      <div className="
+      <div
+        className="
         relative z-10
         h-full
         w-full
@@ -157,8 +238,8 @@ const Display6 = () => {
         text-[clamp(14px,1.5vw,24px)]
         space-y-[clamp(10px,1.2vw,22px)]
         overflow-auto
-      ">
-
+      "
+      >
         <div className="text-[clamp(18px,2.2vw,32px)] mb-6">
           // The ASCII Code
         </div>
@@ -167,9 +248,7 @@ const Display6 = () => {
         <div>{"{" + analysis.uuid + "}"}</div>
 
         <div>// Binary</div>
-        <div className="break-all">
-          {"{" + analysis.binary + "}"}
-        </div>
+        <div className="break-all">{"{" + analysis.binary + "}"}</div>
 
         <div>// Hash Code</div>
         <div>{"{" + analysis.hash + "}"}</div>
