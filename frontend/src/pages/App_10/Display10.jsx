@@ -521,6 +521,7 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import Card from "./components/Card";
 import "./styles.css";
 import { getWS, sendJSON } from "../../utils/ws";
+import InputScreen from "./InputScreen";
 
 const displayId = 10;
 
@@ -647,7 +648,8 @@ const Display10 = () => {
       }
 
       if (msg.type === "resetDisplay") {
-        setText("Param");
+        // setText("Param");
+        setText("")
         setResults([]);
         return;
       }
@@ -714,6 +716,9 @@ const Display10 = () => {
   }, []);
 
   const repeatedLangs = repeatedLangsRef.current;
+  if (!text) {
+  return  <InputScreen/>
+}
 
   return (
     <div
