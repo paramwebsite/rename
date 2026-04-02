@@ -1,212 +1,838 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
+// const PATTERNS = [
+//   {
+//     key: "sha",
+//     out: ["σ_h", "sinh(a)"],
+//     desc: "Shear stress or hyperbolic sine.",
+//   },
+//   {
+//     key: "shi",
+//     out: ["sinh(i)", "σ_i"],
+//     desc: "Hyperbolic sine or sigma index.",
+//   },
+//   { key: "sh", out: ["σ", "∫"], desc: "Sigma summation or integral flow." },
+//   {
+//     key: "kri",
+//     out: ["K_r,i", "κ_r(i)"],
+//     desc: "Curvature or indexed constant.",
+//   },
+//   { key: "dev", out: ["ΔV", "∇·E"], desc: "Change in volume or divergence." },
+//   {
+//     key: "raj",
+//     out: ["r_aj", "R_a·J"],
+//     desc: "Radius index or resistance-current.",
+//   },
+//   { key: "rah", out: ["r_h", "ρ_h"], desc: "Radius height or density index." },
+//   {
+//     key: "ram",
+//     out: ["r·a·m", "m·a"],
+//     desc: "Radius-times-acceleration or force core.",
+//   },
+//   { key: "kam", out: ["k·m", "K_m"], desc: "Spring-mass pairing or constant." },
+//   { key: "kal", out: ["k_ℓ", "K_L"], desc: "Length-scale constant." },
+//   {
+//     key: "tan",
+//     out: ["tan(θ)", "sin(θ)/cos(θ)"],
+//     desc: "Tangent angle or sin over cos.",
+//   },
+//   {
+//     key: "sin",
+//     out: ["sin(θ)", "Im(e^{iθ})"],
+//     desc: "Sine wave or imaginary exponential.",
+//   },
+//   {
+//     key: "cos",
+//     out: ["cos(θ)", "Re(e^{iθ})"],
+//     desc: "Cosine wave or real exponential.",
+//   },
+//   {
+//     key: "sec",
+//     out: ["sec(θ)", "1/cos(θ)"],
+//     desc: "Secant angle or inverse cosine.",
+//   },
+//   {
+//     key: "csc",
+//     out: ["csc(θ)", "1/sin(θ)"],
+//     desc: "Cosecant angle or inverse sine.",
+//   },
+//   {
+//     key: "cot",
+//     out: ["cot(θ)", "cos(θ)/sin(θ)"],
+//     desc: "Cotangent or cos over sin.",
+//   },
+
+//   { key: "aa", out: ["a^2", "αα"], desc: "Squared amplitude or twin alpha." },
+//   {
+//     key: "ee",
+//     out: ["E_e", "e^e"],
+//     desc: "Electric field index or exponential growth.",
+//   },
+//   { key: "oo", out: ["∞", "O_0"], desc: "Infinity loop or base state." },
+//   { key: "th", out: ["θ", "∴"], desc: "Theta angle or therefore." },
+//   { key: "ph", out: ["φ", "Φ"], desc: "Phase angle or flux." },
+//   { key: "ch", out: ["χ", "c·h"], desc: "Chi variable or light-times-Planck." },
+//   {
+//     key: "kh",
+//     out: ["k_h", "κ_h"],
+//     desc: "Height constant or curvature index.",
+//   },
+//   { key: "dh", out: ["dH", "Δh"], desc: "Enthalpy change or height change." },
+//   {
+//     key: "bh",
+//     out: ["B·h", "β_h"],
+//     desc: "Magnetic-height term or beta index.",
+//   },
+//   { key: "gh", out: ["g·h", "ΔU"], desc: "Gravitational potential step." },
+//   {
+//     key: "ng",
+//     out: ["η_g", "n·g"],
+//     desc: "Efficiency index or density-gravity.",
+//   },
+//   {
+//     key: "st",
+//     out: ["s·t", "∫dt"],
+//     desc: "Distance-time pair or time integral.",
+//   },
+//   {
+//     key: "pr",
+//     out: ["P_r", "p·r"],
+//     desc: "Pressure-radius or Prandtl style index.",
+//   },
+//   { key: "ra", out: ["r_a", "R_a"], desc: "Radius-at-a or resistance index." },
+//   {
+//     key: "ma",
+//     out: ["m·a", "F"],
+//     desc: "Force core: mass times acceleration.",
+//   },
+//   { key: "ka", out: ["k_a", "κ_a"], desc: "Spring/curvature constant at a." },
+//   { key: "ya", out: ["y_a", "γ_a"], desc: "Y-position or gamma index." },
+//   {
+//     key: "na",
+//     out: ["N_A", "n_a"],
+//     desc: "Avogadro constant or amount index.",
+//   },
+//   { key: "la", out: ["λ", "L_a"], desc: "Wavelength or length index." },
+//   { key: "ri", out: ["r_i", "R_i"], desc: "Inner radius or resistance index." },
+//   {
+//     key: "vi",
+//     out: ["v_i", "V_i"],
+//     desc: "Initial velocity or initial voltage.",
+//   },
+//   {
+//     key: "li",
+//     out: ["ℓ_i", "L_i"],
+//     desc: "Length element or inductance index.",
+//   },
+//   { key: "an", out: ["a_n", "∠n"], desc: "Nth acceleration or angle marker." },
+//   { key: "ar", out: ["a_r", "r"], desc: "Radial acceleration or radius." },
+//   { key: "sa", out: ["s_a", "σ_a"], desc: "Path coordinate or sigma index." },
+//   { key: "ha", out: ["h_a", "ℏ"], desc: "Height index or reduced Planck." },
+//   { key: "ta", out: ["τ_a", "t_a"], desc: "Time constant or time index." },
+
+//   { key: "force", out: ["F", "m·a"], desc: "Force or mass-acceleration form." },
+//   {
+//     key: "energy",
+//     out: ["E", "m c^2"],
+//     desc: "Energy core or relativistic form.",
+//   },
+//   {
+//     key: "power",
+//     out: ["P", "F·v"],
+//     desc: "Power or force-velocity transfer.",
+//   },
+//   { key: "work", out: ["W", "∫F·ds"], desc: "Work or force along path." },
+//   { key: "heat", out: ["Q", "m c_p ΔT"], desc: "Heat or calorimetry form." },
+//   { key: "mass", out: ["m", "ρV"], desc: "Mass or density-volume form." },
+//   {
+//     key: "wave",
+//     out: ["λ", "f^{-1}c"],
+//     desc: "Wavelength or c over frequency.",
+//   },
+
+//   { key: "c", out: ["c", "3×10^8"], desc: "Speed of light constant." },
+//   { key: "g", out: ["g", "9.8"], desc: "Gravity constant." },
+//   { key: "h", out: ["h", "ℏ"], desc: "Planck constant or reduced Planck." },
+//   { key: "kb", out: ["k_B"], desc: "Boltzmann constant." },
+//   { key: "r", out: ["R", "r"], desc: "Gas constant or radius." },
+//   { key: "e", out: ["e", "E"], desc: "Euler base or electric field." },
+//   { key: "pi", out: ["π"], desc: "Pi, circular ratio." },
+//   { key: "mu", out: ["μ", "μ0"], desc: "Micro/viscosity or permeability." },
+//   { key: "eps", out: ["ε", "ε0"], desc: "Permittivity or small error." },
+
+//   { key: "alpha", out: ["α"], desc: "Alpha: origin, self, first principle." },
+//   { key: "beta", out: ["β"], desc: "Beta: growth, response factor." },
+//   {
+//     key: "gamma",
+//     out: ["γ"],
+//     desc: "Gamma: energy scale or relativity factor.",
+//   },
+//   { key: "delta", out: ["Δ"], desc: "Delta: change or difference." },
+//   { key: "theta", out: ["θ"], desc: "Theta: angle or phase." },
+//   { key: "lambda", out: ["λ"], desc: "Lambda: wavelength or eigen-parameter." },
+//   { key: "sigma", out: ["σ", "∑"], desc: "Sigma: stress or summation." },
+//   { key: "phi", out: ["φ", "Φ"], desc: "Phi: phase or flux." },
+//   {
+//     key: "omega",
+//     out: ["Ω", "ω"],
+//     desc: "Omega: resistance or angular frequency.",
+//   },
+//   { key: "tau", out: ["τ"], desc: "Tau: time constant." },
+//   { key: "rho", out: ["ρ"], desc: "Rho: density." },
+//   { key: "eta", out: ["η"], desc: "Eta: efficiency or viscosity." },
+//   { key: "kappa", out: ["κ"], desc: "Kappa: curvature or conductivity." },
+//   { key: "chi", out: ["χ"], desc: "Chi: susceptibility." },
+//   { key: "psi", out: ["ψ"], desc: "Psi: wavefunction." },
+//   { key: "zeta", out: ["ζ"], desc: "Zeta: damping ratio." },
+
+//   { key: "a", out: ["a", "α"], desc: "Acceleration or alpha origin." },
+//   { key: "b", out: ["b", "β"], desc: "Field term or beta response." },
+//   { key: "d", out: ["d", "Δ"], desc: "Differential or change." },
+//   { key: "f", out: ["f", "F"], desc: "Frequency or force." },
+//   { key: "i", out: ["i", "I"], desc: "Index or current." },
+//   { key: "j", out: ["J"], desc: "Joule or current density." },
+//   { key: "k", out: ["k", "κ"], desc: "Spring constant or curvature." },
+//   { key: "l", out: ["ℓ", "L"], desc: "Length or inductance." },
+//   { key: "m", out: ["m"], desc: "Mass term." },
+//   { key: "n", out: ["n", "N"], desc: "Count or normal force marker." },
+//   { key: "o", out: ["Ω", "o"], desc: "Resistance symbol or placeholder." },
+//   { key: "p", out: ["p", "P"], desc: "Momentum or power." },
+//   { key: "q", out: ["q", "Q"], desc: "Charge or heat." },
+//   { key: "s", out: ["s", "σ"], desc: "Displacement or stress." },
+//   { key: "t", out: ["t", "τ"], desc: "Time or time constant." },
+//   { key: "u", out: ["u", "μ"], desc: "Potential energy baseline or mu." },
+//   { key: "v", out: ["v", "V"], desc: "Velocity or voltage." },
+//   { key: "w", out: ["W", "ω"], desc: "Work or angular frequency." },
+//   { key: "x", out: ["x"], desc: "Position axis." },
+//   { key: "y", out: ["y", "γ"], desc: "Y-axis or gamma scale." },
+//   { key: "z", out: ["z", "ζ"], desc: "Z-axis or damping ratio." },
+// ];
+
 const PATTERNS = [
   {
     key: "sha",
-    out: ["σ_h", "sinh(a)"],
-    desc: "Shear stress or hyperbolic sine.",
+    variants: [
+      { out: "σ_h", desc: "Shear stress." },
+      { out: "sinh(a)", desc: "Hyperbolic sine." },
+    ],
   },
   {
     key: "shi",
-    out: ["sinh(i)", "σ_i"],
-    desc: "Hyperbolic sine or sigma index.",
+    variants: [
+      { out: "sinh(i)", desc: "Hyperbolic sine." },
+      { out: "σ_i", desc: "Sigma index." },
+    ],
   },
-  { key: "sh", out: ["σ", "∫"], desc: "Sigma summation or integral flow." },
+  {
+    key: "sh",
+    variants: [
+      { out: "σ", desc: "Sigma summation." },
+      { out: "∫", desc: "Integral flow." },
+    ],
+  },
   {
     key: "kri",
-    out: ["K_r,i", "κ_r(i)"],
-    desc: "Curvature or indexed constant.",
+    variants: [
+      { out: "K_r,i", desc: "Indexed constant." },
+      { out: "κ_r(i)", desc: "Curvature." },
+    ],
   },
-  { key: "dev", out: ["ΔV", "∇·E"], desc: "Change in volume or divergence." },
+  {
+    key: "dev",
+    variants: [
+      { out: "ΔV", desc: "Change in volume." },
+      { out: "∇·E", desc: "Divergence." },
+    ],
+  },
   {
     key: "raj",
-    out: ["r_aj", "R_a·J"],
-    desc: "Radius index or resistance-current.",
+    variants: [
+      { out: "r_aj", desc: "Radius index." },
+      { out: "R_a·J", desc: "Resistance-current." },
+    ],
   },
-  { key: "rah", out: ["r_h", "ρ_h"], desc: "Radius height or density index." },
+  {
+    key: "rah",
+    variants: [
+      { out: "r_h", desc: "Radius height." },
+      { out: "ρ_h", desc: "Density index." },
+    ],
+  },
   {
     key: "ram",
-    out: ["r·a·m", "m·a"],
-    desc: "Radius-times-acceleration or force core.",
+    variants: [
+      { out: "r·a·m", desc: "Radius-times-acceleration." },
+      { out: "m·a", desc: "Force core." },
+    ],
   },
-  { key: "kam", out: ["k·m", "K_m"], desc: "Spring-mass pairing or constant." },
-  { key: "kal", out: ["k_ℓ", "K_L"], desc: "Length-scale constant." },
+  {
+    key: "kam",
+    variants: [
+      { out: "k·m", desc: "Spring-mass pairing." },
+      { out: "K_m", desc: "Constant." },
+    ],
+  },
+  {
+    key: "kal",
+    variants: [
+      { out: "k_ℓ", desc: "Length-scale constant." },
+      { out: "K_L", desc: "Length-scale constant." },
+    ],
+  },
   {
     key: "tan",
-    out: ["tan(θ)", "sin(θ)/cos(θ)"],
-    desc: "Tangent angle or sin over cos.",
+    variants: [
+      { out: "tan(θ)", desc: "Tangent angle." },
+      { out: "sin(θ)/cos(θ)", desc: "Sin over cos." },
+    ],
   },
   {
     key: "sin",
-    out: ["sin(θ)", "Im(e^{iθ})"],
-    desc: "Sine wave or imaginary exponential.",
+    variants: [
+      { out: "sin(θ)", desc: "Sine wave." },
+      { out: "Im(e^{iθ})", desc: "Imaginary exponential." },
+    ],
   },
   {
     key: "cos",
-    out: ["cos(θ)", "Re(e^{iθ})"],
-    desc: "Cosine wave or real exponential.",
+    variants: [
+      { out: "cos(θ)", desc: "Cosine wave." },
+      { out: "Re(e^{iθ})", desc: "Real exponential." },
+    ],
   },
   {
     key: "sec",
-    out: ["sec(θ)", "1/cos(θ)"],
-    desc: "Secant angle or inverse cosine.",
+    variants: [
+      { out: "sec(θ)", desc: "Secant angle." },
+      { out: "1/cos(θ)", desc: "Inverse cosine." },
+    ],
   },
   {
     key: "csc",
-    out: ["csc(θ)", "1/sin(θ)"],
-    desc: "Cosecant angle or inverse sine.",
+    variants: [
+      { out: "csc(θ)", desc: "Cosecant angle." },
+      { out: "1/sin(θ)", desc: "Inverse sine." },
+    ],
   },
   {
     key: "cot",
-    out: ["cot(θ)", "cos(θ)/sin(θ)"],
-    desc: "Cotangent or cos over sin.",
+    variants: [
+      { out: "cot(θ)", desc: "Cotangent." },
+      { out: "cos(θ)/sin(θ)", desc: "Cos over sin." },
+    ],
   },
 
-  { key: "aa", out: ["a^2", "αα"], desc: "Squared amplitude or twin alpha." },
+  {
+    key: "aa",
+    variants: [
+      { out: "a^2", desc: "Squared amplitude." },
+      { out: "αα", desc: "Twin alpha." },
+    ],
+  },
   {
     key: "ee",
-    out: ["E_e", "e^e"],
-    desc: "Electric field index or exponential growth.",
+    variants: [
+      { out: "E_e", desc: "Electric field index." },
+      { out: "e^e", desc: "Exponential growth." },
+    ],
   },
-  { key: "oo", out: ["∞", "O_0"], desc: "Infinity loop or base state." },
-  { key: "th", out: ["θ", "∴"], desc: "Theta angle or therefore." },
-  { key: "ph", out: ["φ", "Φ"], desc: "Phase angle or flux." },
-  { key: "ch", out: ["χ", "c·h"], desc: "Chi variable or light-times-Planck." },
+  {
+    key: "oo",
+    variants: [
+      { out: "∞", desc: "Infinity loop." },
+      { out: "O_0", desc: "Base state." },
+    ],
+  },
+  {
+    key: "th",
+    variants: [
+      { out: "θ", desc: "Theta angle." },
+      { out: "∴", desc: "Therefore." },
+    ],
+  },
+  {
+    key: "ph",
+    variants: [
+      { out: "φ", desc: "Phase angle." },
+      { out: "Φ", desc: "Flux." },
+    ],
+  },
+  {
+    key: "ch",
+    variants: [
+      { out: "χ", desc: "Chi variable." },
+      { out: "c·h", desc: "Light-times-Planck." },
+    ],
+  },
   {
     key: "kh",
-    out: ["k_h", "κ_h"],
-    desc: "Height constant or curvature index.",
+    variants: [
+      { out: "k_h", desc: "Height constant." },
+      { out: "κ_h", desc: "Curvature index." },
+    ],
   },
-  { key: "dh", out: ["dH", "Δh"], desc: "Enthalpy change or height change." },
+  {
+    key: "dh",
+    variants: [
+      { out: "dH", desc: "Enthalpy change." },
+      { out: "Δh", desc: "Height change." },
+    ],
+  },
   {
     key: "bh",
-    out: ["B·h", "β_h"],
-    desc: "Magnetic-height term or beta index.",
+    variants: [
+      { out: "B·h", desc: "Magnetic-height term." },
+      { out: "β_h", desc: "Beta index." },
+    ],
   },
-  { key: "gh", out: ["g·h", "ΔU"], desc: "Gravitational potential step." },
+  {
+    key: "gh",
+    variants: [
+      { out: "g·h", desc: "Gravitational potential step." },
+      { out: "ΔU", desc: "Potential energy change." },
+    ],
+  },
   {
     key: "ng",
-    out: ["η_g", "n·g"],
-    desc: "Efficiency index or density-gravity.",
+    variants: [
+      { out: "η_g", desc: "Efficiency index." },
+      { out: "n·g", desc: "Density-gravity." },
+    ],
   },
   {
     key: "st",
-    out: ["s·t", "∫dt"],
-    desc: "Distance-time pair or time integral.",
+    variants: [
+      { out: "s·t", desc: "Distance-time pair." },
+      { out: "∫dt", desc: "Time integral." },
+    ],
   },
   {
     key: "pr",
-    out: ["P_r", "p·r"],
-    desc: "Pressure-radius or Prandtl style index.",
+    variants: [
+      { out: "P_r", desc: "Pressure-radius." },
+      { out: "p·r", desc: "Prandtl style index." },
+    ],
   },
-  { key: "ra", out: ["r_a", "R_a"], desc: "Radius-at-a or resistance index." },
+  {
+    key: "ra",
+    variants: [
+      { out: "r_a", desc: "Radius-at-a." },
+      { out: "R_a", desc: "Resistance index." },
+    ],
+  },
   {
     key: "ma",
-    out: ["m·a", "F"],
-    desc: "Force core: mass times acceleration.",
+    variants: [
+      { out: "m·a", desc: "Mass times acceleration." },
+      { out: "F", desc: "Force core." },
+    ],
   },
-  { key: "ka", out: ["k_a", "κ_a"], desc: "Spring/curvature constant at a." },
-  { key: "ya", out: ["y_a", "γ_a"], desc: "Y-position or gamma index." },
+  {
+    key: "ka",
+    variants: [
+      { out: "k_a", desc: "Spring constant at a." },
+      { out: "κ_a", desc: "Curvature constant at a." },
+    ],
+  },
+  {
+    key: "ya",
+    variants: [
+      { out: "y_a", desc: "Y-position." },
+      { out: "γ_a", desc: "Gamma index." },
+    ],
+  },
   {
     key: "na",
-    out: ["N_A", "n_a"],
-    desc: "Avogadro constant or amount index.",
+    variants: [
+      { out: "N_A", desc: "Avogadro constant." },
+      { out: "n_a", desc: "Amount index." },
+    ],
   },
-  { key: "la", out: ["λ", "L_a"], desc: "Wavelength or length index." },
-  { key: "ri", out: ["r_i", "R_i"], desc: "Inner radius or resistance index." },
+  {
+    key: "la",
+    variants: [
+      { out: "λ", desc: "Wavelength." },
+      { out: "L_a", desc: "Length index." },
+    ],
+  },
+  {
+    key: "ri",
+    variants: [
+      { out: "r_i", desc: "Inner radius." },
+      { out: "R_i", desc: "Resistance index." },
+    ],
+  },
   {
     key: "vi",
-    out: ["v_i", "V_i"],
-    desc: "Initial velocity or initial voltage.",
+    variants: [
+      { out: "v_i", desc: "Initial velocity." },
+      { out: "V_i", desc: "Initial voltage." },
+    ],
   },
   {
     key: "li",
-    out: ["ℓ_i", "L_i"],
-    desc: "Length element or inductance index.",
+    variants: [
+      { out: "ℓ_i", desc: "Length element." },
+      { out: "L_i", desc: "Inductance index." },
+    ],
   },
-  { key: "an", out: ["a_n", "∠n"], desc: "Nth acceleration or angle marker." },
-  { key: "ar", out: ["a_r", "r"], desc: "Radial acceleration or radius." },
-  { key: "sa", out: ["s_a", "σ_a"], desc: "Path coordinate or sigma index." },
-  { key: "ha", out: ["h_a", "ℏ"], desc: "Height index or reduced Planck." },
-  { key: "ta", out: ["τ_a", "t_a"], desc: "Time constant or time index." },
+  {
+    key: "an",
+    variants: [
+      { out: "a_n", desc: "Nth acceleration." },
+      { out: "∠n", desc: "Angle marker." },
+    ],
+  },
+  {
+    key: "ar",
+    variants: [
+      { out: "a_r", desc: "Radial acceleration." },
+      { out: "r", desc: "Radius." },
+    ],
+  },
+  {
+    key: "sa",
+    variants: [
+      { out: "s_a", desc: "Path coordinate." },
+      { out: "σ_a", desc: "Sigma index." },
+    ],
+  },
+  {
+    key: "ha",
+    variants: [
+      { out: "h_a", desc: "Height index." },
+      { out: "ℏ", desc: "Reduced Planck." },
+    ],
+  },
+  {
+    key: "ta",
+    variants: [
+      { out: "τ_a", desc: "Time constant." },
+      { out: "t_a", desc: "Time index." },
+    ],
+  },
 
-  { key: "force", out: ["F", "m·a"], desc: "Force or mass-acceleration form." },
+  {
+    key: "force",
+    variants: [
+      { out: "F", desc: "Force." },
+      { out: "m·a", desc: "Mass-acceleration form." },
+    ],
+  },
   {
     key: "energy",
-    out: ["E", "m c^2"],
-    desc: "Energy core or relativistic form.",
+    variants: [
+      { out: "E", desc: "Energy core." },
+      { out: "m c^2", desc: "Relativistic form." },
+    ],
   },
   {
     key: "power",
-    out: ["P", "F·v"],
-    desc: "Power or force-velocity transfer.",
+    variants: [
+      { out: "P", desc: "Power." },
+      { out: "F·v", desc: "Force-velocity transfer." },
+    ],
   },
-  { key: "work", out: ["W", "∫F·ds"], desc: "Work or force along path." },
-  { key: "heat", out: ["Q", "m c_p ΔT"], desc: "Heat or calorimetry form." },
-  { key: "mass", out: ["m", "ρV"], desc: "Mass or density-volume form." },
+  {
+    key: "work",
+    variants: [
+      { out: "W", desc: "Work." },
+      { out: "∫F·ds", desc: "Force along path." },
+    ],
+  },
+  {
+    key: "heat",
+    variants: [
+      { out: "Q", desc: "Heat." },
+      { out: "m c_p ΔT", desc: "Calorimetry form." },
+    ],
+  },
+  {
+    key: "mass",
+    variants: [
+      { out: "m", desc: "Mass term." },
+      { out: "ρV", desc: "Density-volume form." },
+    ],
+  },
   {
     key: "wave",
-    out: ["λ", "f^{-1}c"],
-    desc: "Wavelength or c over frequency.",
+    variants: [
+      { out: "λ", desc: "Wavelength." },
+      { out: "f^{-1}c", desc: "C over frequency." },
+    ],
   },
 
-  { key: "c", out: ["c", "3×10^8"], desc: "Speed of light constant." },
-  { key: "g", out: ["g", "9.8"], desc: "Gravity constant." },
-  { key: "h", out: ["h", "ℏ"], desc: "Planck constant or reduced Planck." },
-  { key: "kb", out: ["k_B"], desc: "Boltzmann constant." },
-  { key: "r", out: ["R", "r"], desc: "Gas constant or radius." },
-  { key: "e", out: ["e", "E"], desc: "Euler base or electric field." },
-  { key: "pi", out: ["π"], desc: "Pi, circular ratio." },
-  { key: "mu", out: ["μ", "μ0"], desc: "Micro/viscosity or permeability." },
-  { key: "eps", out: ["ε", "ε0"], desc: "Permittivity or small error." },
+  {
+    key: "c",
+    variants: [
+      { out: "c", desc: "Speed of light constant." },
+      { out: "3×10^8", desc: "Speed of light magnitude." },
+    ],
+  },
+  {
+    key: "g",
+    variants: [
+      { out: "g", desc: "Gravity constant." },
+      { out: "9.8", desc: "Gravity constant magnitude." },
+    ],
+  },
+  {
+    key: "h",
+    variants: [
+      { out: "h", desc: "Planck constant." },
+      { out: "ℏ", desc: "Reduced Planck." },
+    ],
+  },
+  {
+    key: "kb",
+    variants: [{ out: "k_B", desc: "Boltzmann constant." }],
+  },
+  {
+    key: "r",
+    variants: [
+      { out: "R", desc: "Gas constant." },
+      { out: "r", desc: "Radius." },
+    ],
+  },
+  {
+    key: "e",
+    variants: [
+      { out: "e", desc: "Euler base." },
+      { out: "E", desc: "Electric field." },
+    ],
+  },
+  {
+    key: "pi",
+    variants: [{ out: "π", desc: "Pi, circular ratio." }],
+  },
+  {
+    key: "mu",
+    variants: [
+      { out: "μ", desc: "Micro or viscosity symbol." },
+      { out: "μ0", desc: "Permeability." },
+    ],
+  },
+  {
+    key: "eps",
+    variants: [
+      { out: "ε", desc: "Small error." },
+      { out: "ε0", desc: "Permittivity." },
+    ],
+  },
 
-  { key: "alpha", out: ["α"], desc: "Alpha: origin, self, first principle." },
-  { key: "beta", out: ["β"], desc: "Beta: growth, response factor." },
+  {
+    key: "alpha",
+    variants: [{ out: "α", desc: "Alpha: origin, self, first principle." }],
+  },
+  {
+    key: "beta",
+    variants: [{ out: "β", desc: "Beta: growth, response factor." }],
+  },
   {
     key: "gamma",
-    out: ["γ"],
-    desc: "Gamma: energy scale or relativity factor.",
+    variants: [{ out: "γ", desc: "Gamma: energy scale or relativity factor." }],
   },
-  { key: "delta", out: ["Δ"], desc: "Delta: change or difference." },
-  { key: "theta", out: ["θ"], desc: "Theta: angle or phase." },
-  { key: "lambda", out: ["λ"], desc: "Lambda: wavelength or eigen-parameter." },
-  { key: "sigma", out: ["σ", "∑"], desc: "Sigma: stress or summation." },
-  { key: "phi", out: ["φ", "Φ"], desc: "Phi: phase or flux." },
+  {
+    key: "delta",
+    variants: [{ out: "Δ", desc: "Delta: change or difference." }],
+  },
+  {
+    key: "theta",
+    variants: [{ out: "θ", desc: "Theta: angle or phase." }],
+  },
+  {
+    key: "lambda",
+    variants: [{ out: "λ", desc: "Lambda: wavelength or eigen-parameter." }],
+  },
+  {
+    key: "sigma",
+    variants: [
+      { out: "σ", desc: "Stress." },
+      { out: "∑", desc: "Summation." },
+    ],
+  },
+  {
+    key: "phi",
+    variants: [
+      { out: "φ", desc: "Phase." },
+      { out: "Φ", desc: "Flux." },
+    ],
+  },
   {
     key: "omega",
-    out: ["Ω", "ω"],
-    desc: "Omega: resistance or angular frequency.",
+    variants: [
+      { out: "Ω", desc: "Resistance." },
+      { out: "ω", desc: "Angular frequency." },
+    ],
   },
-  { key: "tau", out: ["τ"], desc: "Tau: time constant." },
-  { key: "rho", out: ["ρ"], desc: "Rho: density." },
-  { key: "eta", out: ["η"], desc: "Eta: efficiency or viscosity." },
-  { key: "kappa", out: ["κ"], desc: "Kappa: curvature or conductivity." },
-  { key: "chi", out: ["χ"], desc: "Chi: susceptibility." },
-  { key: "psi", out: ["ψ"], desc: "Psi: wavefunction." },
-  { key: "zeta", out: ["ζ"], desc: "Zeta: damping ratio." },
+  {
+    key: "tau",
+    variants: [{ out: "τ", desc: "Tau: time constant." }],
+  },
+  {
+    key: "rho",
+    variants: [{ out: "ρ", desc: "Rho: density." }],
+  },
+  {
+    key: "eta",
+    variants: [{ out: "η", desc: "Eta: efficiency or viscosity." }],
+  },
+  {
+    key: "kappa",
+    variants: [{ out: "κ", desc: "Kappa: curvature or conductivity." }],
+  },
+  {
+    key: "chi",
+    variants: [{ out: "χ", desc: "Chi: susceptibility." }],
+  },
+  {
+    key: "psi",
+    variants: [{ out: "ψ", desc: "Psi: wavefunction." }],
+  },
+  {
+    key: "zeta",
+    variants: [{ out: "ζ", desc: "Zeta: damping ratio." }],
+  },
 
-  { key: "a", out: ["a", "α"], desc: "Acceleration or alpha origin." },
-  { key: "b", out: ["b", "β"], desc: "Field term or beta response." },
-  { key: "d", out: ["d", "Δ"], desc: "Differential or change." },
-  { key: "f", out: ["f", "F"], desc: "Frequency or force." },
-  { key: "i", out: ["i", "I"], desc: "Index or current." },
-  { key: "j", out: ["J"], desc: "Joule or current density." },
-  { key: "k", out: ["k", "κ"], desc: "Spring constant or curvature." },
-  { key: "l", out: ["ℓ", "L"], desc: "Length or inductance." },
-  { key: "m", out: ["m"], desc: "Mass term." },
-  { key: "n", out: ["n", "N"], desc: "Count or normal force marker." },
-  { key: "o", out: ["Ω", "o"], desc: "Resistance symbol or placeholder." },
-  { key: "p", out: ["p", "P"], desc: "Momentum or power." },
-  { key: "q", out: ["q", "Q"], desc: "Charge or heat." },
-  { key: "s", out: ["s", "σ"], desc: "Displacement or stress." },
-  { key: "t", out: ["t", "τ"], desc: "Time or time constant." },
-  { key: "u", out: ["u", "μ"], desc: "Potential energy baseline or mu." },
-  { key: "v", out: ["v", "V"], desc: "Velocity or voltage." },
-  { key: "w", out: ["W", "ω"], desc: "Work or angular frequency." },
-  { key: "x", out: ["x"], desc: "Position axis." },
-  { key: "y", out: ["y", "γ"], desc: "Y-axis or gamma scale." },
-  { key: "z", out: ["z", "ζ"], desc: "Z-axis or damping ratio." },
+  {
+    key: "a",
+    variants: [
+      { out: "a", desc: "Acceleration." },
+      { out: "α", desc: "Alpha origin." },
+    ],
+  },
+  {
+    key: "b",
+    variants: [
+      { out: "b", desc: "Field term." },
+      { out: "β", desc: "Beta response." },
+    ],
+  },
+  {
+    key: "d",
+    variants: [
+      { out: "d", desc: "Differential." },
+      { out: "Δ", desc: "Change." },
+    ],
+  },
+  {
+    key: "f",
+    variants: [
+      { out: "f", desc: "Frequency." },
+      { out: "F", desc: "Force." },
+    ],
+  },
+  {
+    key: "i",
+    variants: [
+      { out: "i", desc: "Index." },
+      { out: "I", desc: "Current." },
+    ],
+  },
+  {
+    key: "j",
+    variants: [{ out: "J", desc: "Joule or current density." }],
+  },
+  {
+    key: "k",
+    variants: [
+      { out: "k", desc: "Spring constant." },
+      { out: "κ", desc: "Curvature." },
+    ],
+  },
+  {
+    key: "l",
+    variants: [
+      { out: "ℓ", desc: "Length." },
+      { out: "L", desc: "Inductance." },
+    ],
+  },
+  {
+    key: "m",
+    variants: [{ out: "m", desc: "Mass term." }],
+  },
+  {
+    key: "n",
+    variants: [
+      { out: "n", desc: "Count." },
+      { out: "N", desc: "Normal force marker." },
+    ],
+  },
+  {
+    key: "o",
+    variants: [
+      { out: "Ω", desc: "Resistance symbol." },
+      { out: "o", desc: "Placeholder." },
+    ],
+  },
+  {
+    key: "p",
+    variants: [
+      { out: "p", desc: "Momentum." },
+      { out: "P", desc: "Power." },
+    ],
+  },
+  {
+    key: "q",
+    variants: [
+      { out: "q", desc: "Charge." },
+      { out: "Q", desc: "Heat." },
+    ],
+  },
+  {
+    key: "s",
+    variants: [
+      { out: "s", desc: "Displacement." },
+      { out: "σ", desc: "Stress." },
+    ],
+  },
+  {
+    key: "t",
+    variants: [
+      { out: "t", desc: "Time." },
+      { out: "τ", desc: "Time constant." },
+    ],
+  },
+  {
+    key: "u",
+    variants: [
+      { out: "u", desc: "Potential energy baseline." },
+      { out: "μ", desc: "Mu." },
+    ],
+  },
+  {
+    key: "v",
+    variants: [
+      { out: "v", desc: "Velocity." },
+      { out: "V", desc: "Voltage." },
+    ],
+  },
+  {
+    key: "w",
+    variants: [
+      { out: "W", desc: "Work." },
+      { out: "ω", desc: "Angular frequency." },
+    ],
+  },
+  {
+    key: "x",
+    variants: [{ out: "x", desc: "Position axis." }],
+  },
+  {
+    key: "y",
+    variants: [
+      { out: "y", desc: "Y-axis." },
+      { out: "γ", desc: "Gamma scale." },
+    ],
+  },
+  {
+    key: "z",
+    variants: [
+      { out: "z", desc: "Z-axis." },
+      { out: "ζ", desc: "Damping ratio." },
+    ],
+  },
 ];
 
 const GENERATED_SYLLABLES = [
@@ -317,62 +943,145 @@ const GENERATED_SYLLABLES = [
   "zo",
 ];
 
+// function buildGeneratedEntries() {
+//   const picks = [];
+//   for (const syl of GENERATED_SYLLABLES) {
+//     const c = syl[0];
+//     let out;
+//     let desc;
+
+//     if ("aeiou".includes(c)) {
+//       out = [`${syl[0]}_${syl[1]}`, `e^{${syl[0]}}`];
+//       desc = "Indexed state or exponential mode.";
+//     } else if (c === "p") {
+//       out = ["p", "P", "p·v"];
+//       desc = "Momentum/power style coupling.";
+//     } else if (c === "v") {
+//       out = ["v_" + syl[1], "V_" + syl[1]];
+//       desc = "Velocity/voltage indexed component.";
+//     } else if (c === "m") {
+//       out = ["m_" + syl[1], "μ_" + syl[1]];
+//       desc = "Mass or mu-index term.";
+//     } else if (c === "s") {
+//       out = ["s_" + syl[1], "σ_" + syl[1]];
+//       desc = "Displacement or stress index.";
+//     } else if (c === "t") {
+//       out = ["t_" + syl[1], "τ_" + syl[1]];
+//       desc = "Time marker or time constant.";
+//     } else if (c === "r") {
+//       out = [
+//         "[" + "r_" + syl[1] + "]".replace("[", "").replace("]", ""),
+//         "R_" + syl[1],
+//       ];
+//       desc = "Radius or resistance index.";
+//     } else if (c === "k") {
+//       out = ["k_" + syl[1], "κ_" + syl[1]];
+//       desc = "Constant or curvature index.";
+//     } else if (c === "d") {
+//       out = ["Δ" + syl[1], "d" + syl[1]];
+//       desc = "Change term or differential marker.";
+//     } else if (c === "c") {
+//       out = ["c_" + syl[1], "cos(θ)"];
+//       desc = "Constant index or cosine anchor.";
+//     } else if (c === "g") {
+//       out = ["g_" + syl[1], "γ_" + syl[1]];
+//       desc = "Gravity index or gamma scale.";
+//     } else if (c === "b") {
+//       out = ["β_" + syl[1], "B_" + syl[1]];
+//       desc = "Beta response or field component.";
+//     } else {
+//       out = [`${c}_${syl[1]}`, `${c}·${syl[1]}`];
+//       desc = "Indexed variable or simple product coupling.";
+//     }
+
+//     picks.push({ key: syl, out, desc });
+//   }
+//   return picks;
+// }
+
 function buildGeneratedEntries() {
   const picks = [];
+
   for (const syl of GENERATED_SYLLABLES) {
     const c = syl[0];
-    let out;
-    let desc;
+    let variants;
 
     if ("aeiou".includes(c)) {
-      out = [`${syl[0]}_${syl[1]}`, `e^{${syl[0]}}`];
-      desc = "Indexed state or exponential mode.";
-    } else if (c === "p") {
-      out = ["p", "P", "p·v"];
-      desc = "Momentum/power style coupling.";
-    } else if (c === "v") {
-      out = ["v_" + syl[1], "V_" + syl[1]];
-      desc = "Velocity/voltage indexed component.";
-    } else if (c === "m") {
-      out = ["m_" + syl[1], "μ_" + syl[1]];
-      desc = "Mass or mu-index term.";
-    } else if (c === "s") {
-      out = ["s_" + syl[1], "σ_" + syl[1]];
-      desc = "Displacement or stress index.";
-    } else if (c === "t") {
-      out = ["t_" + syl[1], "τ_" + syl[1]];
-      desc = "Time marker or time constant.";
-    } else if (c === "r") {
-      out = [
-        "[" + "r_" + syl[1] + "]".replace("[", "").replace("]", ""),
-        "R_" + syl[1],
+      variants = [
+        { out: `${syl[0]}_${syl[1]}`, desc: "Indexed state." },
+        { out: `e^{${syl[0]}}`, desc: "Exponential mode." },
       ];
-      desc = "Radius or resistance index.";
+    } else if (c === "p") {
+      variants = [
+        { out: "p", desc: "Momentum." },
+        { out: "P", desc: "Power." },
+        { out: "p·v", desc: "Momentum-power style coupling." },
+      ];
+    } else if (c === "v") {
+      variants = [
+        { out: "v_" + syl[1], desc: "Velocity indexed component." },
+        { out: "V_" + syl[1], desc: "Voltage indexed component." },
+      ];
+    } else if (c === "m") {
+      variants = [
+        { out: "m_" + syl[1], desc: "Mass indexed term." },
+        { out: "μ_" + syl[1], desc: "Mu-index term." },
+      ];
+    } else if (c === "s") {
+      variants = [
+        { out: "s_" + syl[1], desc: "Displacement index." },
+        { out: "σ_" + syl[1], desc: "Stress index." },
+      ];
+    } else if (c === "t") {
+      variants = [
+        { out: "t_" + syl[1], desc: "Time marker." },
+        { out: "τ_" + syl[1], desc: "Time constant." },
+      ];
+    } else if (c === "r") {
+      variants = [
+        { out: "r_" + syl[1], desc: "Radius index." },
+        { out: "R_" + syl[1], desc: "Resistance index." },
+      ];
     } else if (c === "k") {
-      out = ["k_" + syl[1], "κ_" + syl[1]];
-      desc = "Constant or curvature index.";
+      variants = [
+        { out: "k_" + syl[1], desc: "Constant index." },
+        { out: "κ_" + syl[1], desc: "Curvature index." },
+      ];
     } else if (c === "d") {
-      out = ["Δ" + syl[1], "d" + syl[1]];
-      desc = "Change term or differential marker.";
+      variants = [
+        { out: "Δ" + syl[1], desc: "Change term." },
+        { out: "d" + syl[1], desc: "Differential marker." },
+      ];
     } else if (c === "c") {
-      out = ["c_" + syl[1], "cos(θ)"];
-      desc = "Constant index or cosine anchor.";
+      variants = [
+        { out: "c_" + syl[1], desc: "Constant index." },
+        { out: "cos(θ)", desc: "Cosine anchor." },
+      ];
     } else if (c === "g") {
-      out = ["g_" + syl[1], "γ_" + syl[1]];
-      desc = "Gravity index or gamma scale.";
+      variants = [
+        { out: "g_" + syl[1], desc: "Gravity index." },
+        { out: "γ_" + syl[1], desc: "Gamma scale." },
+      ];
     } else if (c === "b") {
-      out = ["β_" + syl[1], "B_" + syl[1]];
-      desc = "Beta response or field component.";
+      variants = [
+        { out: "β_" + syl[1], desc: "Beta response." },
+        { out: "B_" + syl[1], desc: "Field component." },
+      ];
     } else {
-      out = [`${c}_${syl[1]}`, `${c}·${syl[1]}`];
-      desc = "Indexed variable or simple product coupling.";
+      variants = [
+        { out: `${c}_${syl[1]}`, desc: "Indexed variable." },
+        { out: `${c}·${syl[1]}`, desc: "Simple product coupling." },
+      ];
     }
 
-    picks.push({ key: syl, out, desc });
+    picks.push({
+      key: syl,
+      variants,
+    });
   }
+
   return picks;
 }
-
 const FULL_BANK = [...PATTERNS, ...buildGeneratedEntries()];
 
 function hashString(str) {
@@ -513,6 +1222,71 @@ function ChalkCanvas({ textLines, isActive, onDone }) {
   return <canvas ref={canvasRef} className="block h-full w-full" />;
 }
 
+// function compileNameToFormula(nameRaw) {
+//   const name = (nameRaw || "").trim().toLowerCase();
+//   const cleaned = name.replace(/[^a-z]/g, "");
+//   const seed = hashString(cleaned);
+
+//   const patterns = FULL_BANK.slice().sort(
+//     (a, b) => b.key.length - a.key.length,
+//   );
+
+//   const tokens = [];
+//   const interpretations = [];
+
+//   let i = 0;
+//   while (i < cleaned.length) {
+//     let matched = null;
+
+//     for (const p of patterns) {
+//       if (cleaned.startsWith(p.key, i)) {
+//         matched = p;
+//         break;
+//       }
+//     }
+
+//     if (!matched) {
+//       const ch = cleaned[i];
+//       tokens.push(ch);
+//       interpretations.push({ chunk: ch, out: ch, desc: "Symbol placeholder." });
+//       i += 1;
+//       continue;
+//     }
+
+//     const alts = Array.isArray(matched.out) ? matched.out : [matched.out];
+//     const pickIndex = (seed + i * 131) % alts.length;
+//     const chosen = alts[pickIndex];
+
+//     tokens.push(chosen);
+//     interpretations.push({
+//       chunk: matched.key,
+//       out: chosen,
+//       desc: matched.desc,
+//     });
+
+//     i += matched.key.length;
+//   }
+
+//   let formula = "";
+//   for (let t = 0; t < tokens.length; t++) {
+//     const cur = tokens[t];
+//     const prev = formula.trimEnd();
+//     const prevLast = prev.length ? prev[prev.length - 1] : "";
+//     const curFirst = cur.length ? cur[0] : "";
+
+//     const needsDot =
+//       prevLast &&
+//       isAlphaNumOrGreek(prevLast) &&
+//       isAlphaNumOrGreek(curFirst) &&
+//       curFirst !== "(";
+
+//     formula += (t === 0 ? "" : needsDot ? "·" : "") + cur;
+//   }
+
+//   const pretty = formula.length > 18 ? ` ${formula}` : formula;
+//   return { cleaned, formula: pretty, interpretations };
+// }
+
 function compileNameToFormula(nameRaw) {
   const name = (nameRaw || "").trim().toLowerCase();
   const cleaned = name.replace(/[^a-z]/g, "");
@@ -539,20 +1313,33 @@ function compileNameToFormula(nameRaw) {
     if (!matched) {
       const ch = cleaned[i];
       tokens.push(ch);
-      interpretations.push({ chunk: ch, out: ch, desc: "Symbol placeholder." });
+      interpretations.push({
+        chunk: ch,
+        out: ch,
+        desc: "Symbol placeholder.",
+      });
       i += 1;
       continue;
     }
 
-    const alts = Array.isArray(matched.out) ? matched.out : [matched.out];
-    const pickIndex = (seed + i * 131) % alts.length;
-    const chosen = alts[pickIndex];
+    const variants =
+      matched.variants && matched.variants.length
+        ? matched.variants
+        : (Array.isArray(matched.out) ? matched.out : [matched.out]).map(
+            (out) => ({
+              out,
+              desc: matched.desc || "Symbol mapping.",
+            }),
+          );
 
-    tokens.push(chosen);
+    const pickIndex = (seed + i * 131) % variants.length;
+    const chosen = variants[pickIndex];
+
+    tokens.push(chosen.out);
     interpretations.push({
       chunk: matched.key,
-      out: chosen,
-      desc: matched.desc,
+      out: chosen.out,
+      desc: chosen.desc,
     });
 
     i += matched.key.length;
@@ -574,17 +1361,14 @@ function compileNameToFormula(nameRaw) {
     formula += (t === 0 ? "" : needsDot ? "·" : "") + cur;
   }
 
-  const pretty =
-    formula.length > 18 ? ` ${formula}` : formula;
-  return { cleaned, formula: pretty, interpretations };
+  const pretty = formula.length > 18 ? ` ${formula}` : formula;
+
+  return {
+    cleaned,
+    formula: pretty,
+    interpretations,
+  };
 }
-
-
-
-
-
-
-
 
 function ChalkFormula({ text, onComplete, onDustCreated }) {
   const [visibleChars, setVisibleChars] = useState(0);
@@ -651,9 +1435,12 @@ function ChalkFormula({ text, onComplete, onDustCreated }) {
 
         onDustCreated?.(((current + 0.5) / Math.max(text.length, 1)) * 100);
 
-        setTimeout(() => {
-          setDust((prev) => prev.filter((d) => d.id !== id));
-        }, isLarge ? 1800 : 1200);
+        setTimeout(
+          () => {
+            setDust((prev) => prev.filter((d) => d.id !== id));
+          },
+          isLarge ? 1800 : 1200,
+        );
       }, 22);
 
       const animateChalk = () => {
@@ -717,9 +1504,7 @@ function ChalkFormula({ text, onComplete, onDustCreated }) {
                   ? "blur(0px) brightness(1)"
                   : "blur(4px) brightness(2)",
               clipPath:
-                idx < visibleChars
-                  ? "inset(0 0% 0 0)"
-                  : "inset(0 100% 0 0)",
+                idx < visibleChars ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
             }}
             transition={{
               duration: 0.35,
@@ -797,7 +1582,9 @@ export default function ResultScreen({ name, onBack }) {
   const compiled = useMemo(() => compileNameToFormula(name), [name]);
   const [done, setDone] = useState(false);
   const [accumulatedDust, setAccumulatedDust] = useState([]);
-
+  const descriptionText = useMemo(() => {
+    return compiled.interpretations.map((item) => item.desc).join(" • ");
+  }, [compiled]);
   useEffect(() => {
     setDone(false);
     setAccumulatedDust([]);
@@ -818,8 +1605,80 @@ export default function ResultScreen({ name, onBack }) {
   }, []);
 
   const handleChalkComplete = useCallback(() => {
-  setDone(true);
-}, []);
+    setDone(true);
+  }, []);
+
+  // return (
+  //   <div className="flex min-h-screen w-full items-center justify-center bg-zinc-900 px-4 py-4 text-zinc-100">
+  //     <svg className="hidden">
+  //       <filter id="chalk-texture">
+  //         <feTurbulence
+  //           type="fractalNoise"
+  //           baseFrequency="0.95"
+  //           numOctaves="6"
+  //           result="noise"
+  //         />
+  //         <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" />
+  //       </filter>
+
+  //       <filter id="chalk-stroke">
+  //         <feTurbulence
+  //           type="fractalNoise"
+  //           baseFrequency="0.5"
+  //           numOctaves="4"
+  //           result="noise"
+  //         />
+  //         <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6" />
+  //         <feGaussianBlur stdDeviation="0.18" />
+  //       </filter>
+  //     </svg>
+
+  //     <div className="w-full max-w-6xl">
+  //       <div className="relative mx-auto aspect-square w-[min(88vmin,760px)]">
+  //         <div className="absolute -inset-5 rounded-[26px] border-[18px] border-[#3b2414] bg-[#1a100a] shadow-[0_40px_120px_rgba(0,0,0,0.75)]" />
+
+  //         <div
+  //           className="chalkboard-texture relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-[16px] border-[6px] border-[#5b3a1e] px-5 py-5 shadow-[inset_0_0_180px_rgba(0,0,0,0.55)] md:px-10 md:py-10"
+  //           style={{ filter: "url(#chalk-texture)" }}
+  //         >
+  //           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.05),transparent_35%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.03),transparent_40%)]" />
+
+  //           <div className="relative z-10 flex h-full w-full items-center justify-center">
+  //             <ChalkFormula
+  //               text={compiled.formula}
+  //               onComplete={handleChalkComplete}
+  //               onDustCreated={addDust}
+  //             />
+  //           </div>
+
+  //           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 overflow-hidden">
+  //             {accumulatedDust.map((d) => (
+  //               <div
+  //                 key={d.id}
+  //                 className="absolute bottom-0 h-12 w-16 rounded-full bg-white/20 blur-[22px]"
+  //                 style={{
+  //                   left: `calc(${d.x}% - 32px)`,
+  //                   opacity: d.opacity,
+  //                   transform: `scale(${d.scale})`,
+  //                 }}
+  //               />
+  //             ))}
+  //           </div>
+  //         </div>
+
+  //         <div className="absolute -bottom-6 left-1/2 z-20 flex h-8 w-48 -translate-x-1/2 items-center justify-center gap-4 rounded-b-[2rem] border-t border-white/10 bg-[#2d1b10] shadow-2xl">
+  //           <div className="h-3 w-10 rotate-[22deg] rounded-sm bg-white/95" />
+  //           <div className="h-3 w-8 rotate-[-18deg] rounded-sm bg-white/80" />
+  //           <div className="h-4 w-12 rounded-sm border border-zinc-700 bg-zinc-900" />
+  //         </div>
+
+  //         <span className="sr-only">
+  //           {done ? "Chalk complete." : "Writing..."}
+  //         </span>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-zinc-900 px-4 py-4 text-zinc-100">
@@ -859,7 +1718,7 @@ export default function ResultScreen({ name, onBack }) {
             <div className="relative z-10 flex h-full w-full items-center justify-center">
               <ChalkFormula
                 text={compiled.formula}
-              onComplete={handleChalkComplete}
+                onComplete={handleChalkComplete}
                 onDustCreated={addDust}
               />
             </div>
@@ -888,6 +1747,10 @@ export default function ResultScreen({ name, onBack }) {
           <span className="sr-only">
             {done ? "Chalk complete." : "Writing..."}
           </span>
+        </div>
+
+        <div className="mx-auto mt-10 w-[min(88vmin,760px)] rounded-[18px] border border-white/10 bg-white/5 p-5 text-center text-sm text-white/85 backdrop-blur-md md:text-base">
+          {descriptionText}
         </div>
       </div>
     </div>
