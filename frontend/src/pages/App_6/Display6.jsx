@@ -60,30 +60,6 @@ function uuidFromName(str) {
 
 /* ---------------- BACKGROUND ---------------- */
 
-// function BackgroundNoise() {
-//   const rows = 45;
-//   const cols = 180;
-
-//   const randomChar = () =>
-//     String.fromCharCode(33 + Math.floor(Math.random() * 94));
-
-//   const lines = Array.from({ length: rows }).map(() =>
-//     Array.from({ length: cols })
-//       .map(randomChar)
-//       .join("")
-//   );
-
-//   return (
-//     <div className="absolute inset-0 opacity-10 pointer-events-none select-none text-[#6bd1ff] font-mono text-[clamp(8px,0.7vw,14px)] leading-[1.1]">
-//       {lines.map((l, i) => (
-//         <div key={i}>{l}</div>
-//       ))}
-//     </div>
-//   );
-// }
-
-
-
 function BackgroundNoise() {
   const [viewport, setViewport] = useState({
     width: window.innerWidth,
@@ -114,7 +90,7 @@ function BackgroundNoise() {
       String.fromCharCode(33 + Math.floor(Math.random() * 94));
 
     return Array.from({ length: rows }, () =>
-      Array.from({ length: cols }, randomChar).join("")
+      Array.from({ length: cols }, randomChar).join(""),
     );
   }, [rows, cols]);
 
@@ -156,10 +132,44 @@ function BackgroundNoise() {
 
 /* ---------------- MAIN ---------------- */
 
+function TypewriterText({ text, speed = 35, delay = 0, className = "" }) {
+  const [visible, setVisible] = useState("");
+
+  useEffect(() => {
+    let i = 0;
+    let intervalId;
+    let timeoutId;
+
+    setVisible("");
+
+    timeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        i += 1;
+        setVisible(text.slice(0, i));
+
+        if (i >= text.length) {
+          clearInterval(intervalId);
+        }
+      }, speed);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
+  }, [text, speed, delay]);
+
+  return (
+    <div className={`whitespace-pre-wrap ${className}`}>
+      {visible}
+      <span className="animate-pulse">|</span>
+    </div>
+  );
+}
 const Display6 = () => {
   const ws = useMemo(() => getWS(), []);
   const [name, setName] = useState("");
-
+  const [cycle, setCycle] = useState(0);
   useEffect(() => {
     const onOpen = () => {
       sendJSON(ws, { type: "registerDisplay", displayId });
@@ -206,6 +216,51 @@ const Display6 = () => {
     };
   }, [name]);
 
+  const lines = analysis
+    ? [
+        `// The ASCII Code`,
+        `{${analysis.ascii}}`,
+        `{${analysis.uuid}}`,
+        `// Binary`,
+        `{${analysis.binary}}`,
+        `// Hash Code`,
+        `{${analysis.hash}}`,
+        `// LCM Tokenisation`,
+        `{${analysis.tokens}}`,
+        `Memory Layout:`,
+        `Hexadecimal:`,
+        `${analysis.hex}`,
+        `Octal:`,
+        `${analysis.octal}`,
+        `Unicode Escape:`,
+        `${analysis.unicode}`,
+      ]
+    : [];
+
+  const totalLoopDuration = useMemo(() => {
+    if (!lines.length) return 0;
+
+    const speed = 35;
+    const lineDelay = 1200;
+    const endPause = 2000;
+
+    const longestFinish = Math.max(
+      ...lines.map((line, index) => index * lineDelay + line.length * speed),
+    );
+
+    return longestFinish + endPause;
+  }, [lines]);
+
+  useEffect(() => {
+    if (!lines.length) return;
+
+    const timer = setTimeout(() => {
+      setCycle((prev) => prev + 1);
+    }, totalLoopDuration);
+
+    return () => clearTimeout(timer);
+  }, [lines, totalLoopDuration, cycle]);
+
   /* ---------------- CONDITIONAL RENDER ---------------- */
 
   if (!name) {
@@ -240,32 +295,19 @@ const Display6 = () => {
         overflow-auto
       "
       >
-        <div className="text-[clamp(18px,2.2vw,32px)] mb-6">
-          // The ASCII Code
+        <div className="space-y-[clamp(10px,1.2vw,22px)]">
+          {lines.map((line, index) => (
+            <TypewriterText
+              key={`${name}-${cycle}-${index}`}
+              text={line}
+              speed={35}
+              delay={index * 1200}
+              className={
+                index === 0 ? "text-[clamp(18px,2.2vw,32px)] mb-6" : "break-all"
+              }
+            />
+          ))}
         </div>
-
-        <div>{"{" + analysis.ascii + "}"}</div>
-        <div>{"{" + analysis.uuid + "}"}</div>
-
-        <div>// Binary</div>
-        <div className="break-all">{"{" + analysis.binary + "}"}</div>
-
-        <div>// Hash Code</div>
-        <div>{"{" + analysis.hash + "}"}</div>
-
-        <div>// LCM Tokenisation</div>
-        <div>{"{" + analysis.tokens + "}"}</div>
-
-        <div>Memory Layout:</div>
-
-        <div>Hexadecimal:</div>
-        <div className="break-all">{analysis.hex}</div>
-
-        <div>Octal:</div>
-        <div className="break-all">{analysis.octal}</div>
-
-        <div>Unicode Escape:</div>
-        <div className="break-all">{analysis.unicode}</div>
       </div>
     </div>
   );
