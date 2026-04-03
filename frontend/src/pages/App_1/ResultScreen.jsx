@@ -1582,9 +1582,56 @@ export default function ResultScreen({ name, onBack }) {
   const compiled = useMemo(() => compileNameToFormula(name), [name]);
   const [done, setDone] = useState(false);
   const [accumulatedDust, setAccumulatedDust] = useState([]);
+  // const descriptionText = useMemo(() => {
+  //   return compiled.interpretations.map((item) => item.desc).join(" • ");
+  // }, [compiled]);
+
+  const formatDescriptionText = (text) => {
+    let out = text.toLowerCase();
+
+    const preserveTerms = [
+      "Planck",
+      "Reduced Planck",
+      "Boltzmann",
+      "Avogadro",
+      "Euler",
+      "Pi",
+      "Omega",
+      "Gamma",
+      "Phi",
+      "Theta",
+      "Lambda",
+      "Delta",
+      "Tau",
+      "Rho",
+      "Eta",
+      "Kappa",
+      "Chi",
+      "Psi",
+      "Zeta",
+      "N_A",
+      "Q",
+      "F",
+      "E",
+      "P",
+      "W",
+      "R",
+    ];
+
+    preserveTerms.forEach((term) => {
+      const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      out = out.replace(new RegExp(escaped.toLowerCase(), "g"), term);
+    });
+
+    return out;
+  };
+
   const descriptionText = useMemo(() => {
-    return compiled.interpretations.map((item) => item.desc).join(" • ");
+    return formatDescriptionText(
+      compiled.interpretations.map((item) => item.desc).join(" • "),
+    );
   }, [compiled]);
+
   useEffect(() => {
     setDone(false);
     setAccumulatedDust([]);
@@ -1710,12 +1757,13 @@ export default function ResultScreen({ name, onBack }) {
           <div className="absolute -inset-5 rounded-[26px] border-[18px] border-[#3b2414] bg-[#1a100a] shadow-[0_40px_120px_rgba(0,0,0,0.75)]" />
 
           <div
-            className="chalkboard-texture relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-[16px] border-[6px] border-[#5b3a1e] px-5 py-5 shadow-[inset_0_0_180px_rgba(0,0,0,0.55)] md:px-10 md:py-10"
+            className="chalkboard-texture relative z-10 h-full w-full overflow-hidden rounded-[16px] border-[6px] border-[#5b3a1e] px-5 py-5 shadow-[inset_0_0_180px_rgba(0,0,0,0.55)] md:px-10 md:py-10"
             style={{ filter: "url(#chalk-texture)" }}
           >
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.05),transparent_35%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.03),transparent_40%)]" />
 
-            <div className="relative z-10 flex h-full w-full items-center justify-center">
+            {/* Formula area */}
+            <div className="relative z-10 flex h-[72%] w-full items-center justify-center">
               <ChalkFormula
                 text={compiled.formula}
                 onComplete={handleChalkComplete}
@@ -1723,7 +1771,9 @@ export default function ResultScreen({ name, onBack }) {
               />
             </div>
 
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 overflow-hidden">
+            {/* Description inside chalkboard */}
+
+            {/* <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 overflow-hidden">
               {accumulatedDust.map((d) => (
                 <div
                   key={d.id}
@@ -1735,22 +1785,28 @@ export default function ResultScreen({ name, onBack }) {
                   }}
                 />
               ))}
-            </div>
+            </div> */}
           </div>
-
+          {/* 
           <div className="absolute -bottom-6 left-1/2 z-20 flex h-8 w-48 -translate-x-1/2 items-center justify-center gap-4 rounded-b-[2rem] border-t border-white/10 bg-[#2d1b10] shadow-2xl">
             <div className="h-3 w-10 rotate-[22deg] rounded-sm bg-white/95" />
             <div className="h-3 w-8 rotate-[-18deg] rounded-sm bg-white/80" />
             <div className="h-4 w-12 rounded-sm border border-zinc-700 bg-zinc-900" />
-          </div>
+          </div> */}
 
           <span className="sr-only">
             {done ? "Chalk complete." : "Writing..."}
           </span>
-        </div>
-
-        <div className="mx-auto mt-10 w-[min(88vmin,760px)] rounded-[18px] border border-white/10 bg-white/5 p-5 text-center text-sm text-white/85 backdrop-blur-md md:text-base">
-          {descriptionText}
+          <div className="absolute bottom-6 left-4 right-4 z-20 md:left-8 md:right-8">
+            <div
+              className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-center text-[12px] leading-relaxed text-white/85 backdrop-blur-[2px] md:px-5 md:py-4 md:text-sm"
+              style={{
+                fontFamily: '"Inter", "Segoe UI", sans-serif',
+              }}
+            >
+              {descriptionText}
+            </div>
+          </div>
         </div>
       </div>
     </div>
