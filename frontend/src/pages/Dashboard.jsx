@@ -741,7 +741,7 @@ const Dashboard = () => {
           setUid("");
           setName("");
           sendJSON(ws, { type: "ClearDisplays" });
-        }, 60_000);
+        }, 180_000);
       }
 
       // card lifted

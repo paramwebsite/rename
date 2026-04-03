@@ -204,7 +204,7 @@ The system consists of **12 independent display applications**, each listening t
 | Display 3   | display3.jsx  | 2:1      |map view with 3 legends    |
 | Display 4   | display4.jsx  | 5.5:1    |landsat |
 | Display 5   | display5.jsx  | 1:1      |count similar to slot machine |
-| Display 6   | display6.jsx  | 1.5:1    |ai gen 1 |
+| Display 6   | display6.jsx  | 1.5:1    |codes |
 | Display 7   | display7.jsx  | 1:1      |video display with animation |
 | Display 8   | display8.jsx  | 4:1      |periodic speller  |
 | Display 9   | display9.jsx  | 1.25:2.25|egyptian hierogylphs  |
