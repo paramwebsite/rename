@@ -1,5 +1,5 @@
 import React from "react";
-import Layout10SVG from "./Layout10SVG";
+import Layout11SVG from "./Layout11SVG";
 const COLORS = ["#FE47C6", "#70FE99", "#7A5BFE"];
 
 export default function NameLayout10({ name }) {
@@ -65,7 +65,7 @@ export default function NameLayout10({ name }) {
   return (
     <div style={{ width: "100%", height: "100%" }} >
       <svg viewBox="0 0 1521 2117" style={{ width: "100%", height: "100%", background:"transparent" }}>
-        <Layout10SVG />
+        <Layout11SVG />
 
         {slots.map((slot, index) => {
           const letter = letters[index];

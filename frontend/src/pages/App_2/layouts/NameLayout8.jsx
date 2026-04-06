@@ -1,84 +1,110 @@
-import React from "react";
-import Layout8SVG from "./Layout8SVG";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import Layout8SVG, { LAYOUT8_BOXES } from "./Layout8SVG";
+
 const COLORS = ["#FE47C6", "#70FE99", "#7A5BFE"];
-export default function NameLayout8({ name }) {
-  const letters = name.toLowerCase().split("");
 
-  // Exact rectangles from your SVG (8 total)
-  const slots = [
-    // Top row
-    { x: 386.75, y: 169.75, w: 334, h: 368 },
-    { x: 754.75, y: 169.75, w: 372, h: 368 },
+// Optional: stable color per index instead of random on every render
+const getLetterColor = (index) => COLORS[index % COLORS.length];
 
-    // Left rotated
-    {
-      x: 272.751,
-      y: 552.75,
-      w: 288,
-      h: 453,
-      transform: "rotate(12.7532 272.751 552.75)",
-    },
+function ResponsiveLetter({ letter, box, color }) {
+  const textRef = useRef(null);
+  const [scale, setScale] = useState(1);
 
-    // Big middle rotated
-    {
-      x: 567.799,
-      y: 520.75,
-      w: 454.349,
-      h: 390.274,
-      transform: "rotate(3.46218 567.799 573.75)",
-    },
+  useLayoutEffect(() => {
+    if (!textRef.current || !letter) return;
 
-    // Right rotated
-    {
-      x: 1053.26,
-      y: 592.283,
-      w: 203.431,
-      h: 401.634,
-      transform: "rotate(-7.01904 1053.26 592.283)",
-    },
+    const bbox = textRef.current.getBBox();
 
-    // Bottom row
-    { x: 196.75, y: 1081.75, w: 381, h: 301 },
-    { x: 601.75, y: 960, w: 315, h: 168 },
-    { x: 940.75, y: 1020.75, w: 363, h: 301 },
-  ];
+    if (!bbox.width || !bbox.height) return;
+
+    // padding inside the rect
+    const paddingX = box.w * 0.0;
+    const paddingY = box.h * 0.00;
+
+    const availableWidth = box.w - paddingX * 2;
+    const availableHeight = box.h - paddingY * 2;
+
+    const scaleX = availableWidth / bbox.width;
+    const scaleY = availableHeight / bbox.height;
+
+
+    
+    
+    // choose the smaller scale so it fits both width and height
+    const nextScale = Math.min(scaleX, scaleY);
+    
+    setScale(nextScale);
+
+
+    // console.log(letter, box.w,box.h, scaleX,scaleY  )
+  }, [letter, box.w, box.h]);
+
+  const centerX = box.x + box.w / 2;
+  const centerY = box.y + box.h / 2;
+
+  return (
+    <g>
+      <text
+        ref={textRef}
+        x={centerX}
+        y={centerY}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="Megazoid"
+        fontSize="100"
+        fill={color}
+        className="display2-text"
+        visibility="hidden"
+      >
+        {letter}
+      </text>
+
+      <g transform={`translate(${centerX} ${centerY}) scale(${scale})`}>
+        <text
+          x={0}
+          y={0}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontFamily="Megazoid"
+          fontSize="100"
+          fill={color}
+          className="display2-text"
+        >
+          {letter}
+        </text>
+      </g>
+    </g>
+  );
+}
+
+export default function NameLayout8({ name = "" }) {
+  const letters = name.toLowerCase().split("").slice(0, LAYOUT8_BOXES.length);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <svg viewBox="0 0 1521 2117" style={{ width: "100%", height: "100%" }}>
         <Layout8SVG />
 
-        {slots.map((slot, index) => {
+        {LAYOUT8_BOXES.map((box, index) => {
           const letter = letters[index];
           if (!letter) return null;
 
-          const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2 -70;
-
-          // 🎨 Pick random color for this letter
-          const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-
-          const text = (
-            <text
-              x={centerX}
-              y={centerY}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontFamily="Megazoid"
-              fontSize="260"
-              fill={randomColor}
-              className="display2-text"
-            >
-              {letter}
-            </text>
+          const content = (
+            <ResponsiveLetter
+              letter={letter}
+              box={box}
+              color={getLetterColor(index)}
+            />
           );
 
-          return slot.transform ? (
-            <g key={index} transform={slot.transform}>
-              {text}
+          return box.transform ? (
+            <g key={box.id} transform={box.transform}>
+              {content}
             </g>
           ) : (
-            <g key={index}>{text}</g>
+            <g key={box.id}>
+              {content}
+              </g>
           );
         })}
       </svg>
