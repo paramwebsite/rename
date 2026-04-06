@@ -22,7 +22,7 @@ export default function NameLayout8({ name }) {
     // Big middle rotated
     {
       x: 567.799,
-      y: 573.75,
+      y: 520.75,
       w: 454.349,
       h: 390.274,
       transform: "rotate(3.46218 567.799 573.75)",
@@ -39,8 +39,8 @@ export default function NameLayout8({ name }) {
 
     // Bottom row
     { x: 196.75, y: 1081.75, w: 381, h: 301 },
+    { x: 601.75, y: 960, w: 315, h: 168 },
     { x: 940.75, y: 1020.75, w: 363, h: 301 },
-    { x: 601.75, y: 1020.75, w: 315, h: 168 },
   ];
 
   return (
@@ -53,7 +53,7 @@ export default function NameLayout8({ name }) {
           if (!letter) return null;
 
           const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2;
+          const centerY = slot.y + slot.h / 2 -70;
 
           // 🎨 Pick random color for this letter
           const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
@@ -67,6 +67,7 @@ export default function NameLayout8({ name }) {
               fontFamily="Megazoid"
               fontSize="260"
               fill={randomColor}
+              className="display2-text"
             >
               {letter}
             </text>

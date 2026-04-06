@@ -86,7 +86,7 @@ export default function NameLayout12({ name }) {
           if (!slot) return null;
 
           const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2;
+          const centerY = slot.y + slot.h / 2 -70;
           const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
 
           const text = (
@@ -98,6 +98,7 @@ export default function NameLayout12({ name }) {
               fontFamily="Megazoid"
               fontSize={slot.fontSize}
               fill={randomColor}
+              className="display2-text"
             >
               {letter}
             </text>

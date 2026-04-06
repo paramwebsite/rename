@@ -36,7 +36,7 @@ export default function NameLayout2({ name }) {
           const slot = slots[index];
 
           const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2;
+          const centerY = slot.y + slot.h / 2 -70;
 
           // Auto scale font based on rectangle height
           const fontSize = slot.h * 0.8;
@@ -52,6 +52,7 @@ export default function NameLayout2({ name }) {
                 fontFamily="Megazoid"
                 fontSize={fontSize}
                 fill={randomColor}
+              className="display2-text"
               >
                 {letter}
               </text>

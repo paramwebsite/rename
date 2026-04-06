@@ -42,7 +42,7 @@ export default function NameLayout3({ name }) {
 
           const slot = slots[index];
           const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2;
+          const centerY = slot.y + slot.h / 2 -70;
           const fontSize = slot.h * 0.8;
           const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
           const text = (
@@ -54,6 +54,7 @@ export default function NameLayout3({ name }) {
               fontFamily="Megazoid"
               fontSize="300"
               fill={randomColor}
+              className="display2-text"
             >
               {letter}
             </text>

@@ -35,7 +35,7 @@ export default function NameLayout6({ name }) {
           // 🎨 Pick random color for this letter
           const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
           const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2;
+          const centerY = slot.y + slot.h / 2 -70;
 
           const text = (
             <text
@@ -46,6 +46,7 @@ export default function NameLayout6({ name }) {
               fontFamily="Megazoid"
               fontSize="270"
               fill={randomColor}
+              className="display2-text"
             >
               {letter}
             </text>
