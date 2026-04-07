@@ -3,32 +3,32 @@ import * as React from "react";
 export const LAYOUT4_BOXES = [
   {
     id: "box-1",
-    x: 386.75,
-    y: 269.75,
-    w: 334,
-    h: 368,
+    x: 286.75,
+    y: 69.75,
+    w: 434,
+    h: 468,
   },
   {
     id: "box-2",
     x: 754.75,
-    y: 269.75,
-    w: 372,
-    h: 368,
+    y: 69.75,
+    w: 472,
+    h: 468,
   },
   {
     id: "box-3",
-    x: 263.951,
+    x: 163.951,
     y: 658.535,
     w: 546.489,
-    h: 474.296,
+    h: 574.296,
     transform: "rotate(4.16948 263.951 658.535)",
   },
   {
     id: "box-4",
-    x: 838.75,
+    x: 818.75,
     y: 713.26,
-    w: 421.785,
-    h: 387,
+    w: 521.785,
+    h: 587,
     transform: "rotate(-11.6969 838.75 713.26)",
   },
 ];
@@ -100,7 +100,7 @@ const SVGComponent = (props) => (
           width={box.w}
           height={box.h}
           fill="#D9D9D9"
-          display="block"
+          display="none"
         />
       );
 

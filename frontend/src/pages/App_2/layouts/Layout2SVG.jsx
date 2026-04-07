@@ -3,18 +3,18 @@ import * as React from "react";
 export const LAYOUT2_BOXES = [
   {
     id: "box-1",
-    x: 387.234,
-    y: 170.75,
-    w: 546.489,
-    h: 474.296,
+    x: 317.234,
+    y: 50.75,
+    w: 700.489,
+    h: 600.296,
     transform: "rotate(4.16948 387.234 170.75)",
   },
   {
     id: "box-2",
     x: 578.605,
     y: 778.491,
-    w: 642.752,
-    h: 423.321,
+    w: 742.752,
+    h: 523.321,
     transform: "rotate(-11.6969 578.605 778.491)",
   },
 ];
@@ -86,7 +86,7 @@ const SVGComponent = (props) => (
           width={box.w}
           height={box.h}
           fill="#D9D9D9"
-          display="block"
+          display="none" 
         />
       );
 

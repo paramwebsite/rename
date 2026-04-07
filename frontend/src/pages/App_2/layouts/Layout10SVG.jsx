@@ -4,21 +4,21 @@ export const LAYOUT10_BOXES = [
   {
     id: "box-1",
     x: 386.75,
-    y: 169.75,
+    y: 69.75,
     w: 334,
     h: 368,
   },
   {
     id: "box-2",
     x: 754.75,
-    y: 169.75,
+    y: 69.75,
     w: 372,
     h: 368,
   },
   {
     id: "box-3",
     x: 272.751,
-    y: 552.75,
+    y: 452.75,
     w: 288,
     h: 453,
     transform: "rotate(12.7532 272.751 552.75)",
@@ -26,7 +26,7 @@ export const LAYOUT10_BOXES = [
   {
     id: "box-4",
     x: 567.799,
-    y: 573.75,
+    y: 473.75,
     w: 226.954,
     h: 232.639,
     transform: "rotate(3.46218 567.799 573.75)",
@@ -34,7 +34,7 @@ export const LAYOUT10_BOXES = [
   {
     id: "box-5",
     x: 810.799,
-    y: 567.75,
+    y: 467.75,
     w: 226.954,
     h: 298.251,
     transform: "rotate(3.46218 810.799 567.75)",
@@ -42,38 +42,38 @@ export const LAYOUT10_BOXES = [
   {
     id: "box-6",
     x: 1053.26,
-    y: 592.283,
+    y: 492.283,
     w: 203.431,
     h: 401.634,
     transform: "rotate(-7.01904 1053.26 592.283)",
   },
   {
     id: "box-7",
-    x: 196.75,
-    y: 1081.75,
+    x: 146.75,
+    y: 981.75,
     w: 381,
-    h: 301,
+    h: 371,
   },
   {
     id: "box-8",
 
     x: 602.75,
-    y: 907.75,
-    w: 232.554,
+    y: 807.75,
+    w: 332.554,
     h: 370.08,
     transform: "rotate(-3.10286 305.157 1419.34)",
   },
   {
     id: "box-9",
     x: 973.75,
-    y: 1020.75,
-    w: 331,
-    h: 301,
+    y: 920.75,
+    w: 431,
+    h: 401,
   },
   {
     id: "box-10",
 
-    x: 305.157,
+    x: 205.157,
     y: 1419.34,
     w: 359,
     h: 326,
@@ -146,7 +146,7 @@ const SVGComponent = (props) => (
           width={box.w}
           height={box.h}
           fill="#D9D9D9"
-          display="block"
+          display="none"
         />
       );
 

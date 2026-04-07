@@ -4,24 +4,24 @@ export const LAYOUT3_BOXES = [
   {
     id: "box-1",
     x: 517.75,
-    y: 196.75,
-    w: 469,
-    h: 462,
+    y: 56.75,
+    w: 569,
+    h: 562,
   },
   {
     id: "box-2",
-    x: 231.234,
+    x: 131.234,
     y: 658.75,
     w: 546.489,
-    h: 474.296,
+    h: 574.296,
     transform: "rotate(4.16948 231.234 658.75)",
   },
   {
     id: "box-3",
-    x: 788.152,
+    x: 798.152,
     y: 723.736,
-    w: 473.455,
-    h: 387,
+    w: 573.455,
+    h: 587,
     transform: "rotate(-11.6969 788.152 723.736)",
   },
 ];
@@ -93,7 +93,7 @@ const SVGComponent = (props) => (
           width={box.w}
           height={box.h}
           fill="#D9D9D9"
-          display="block"
+          display="none"
         />
       );
 
