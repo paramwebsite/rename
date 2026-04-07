@@ -1,26 +1,72 @@
-import React from "react";
-import Layout2SVG from "./Layout2SVG";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import Layout2SVG, { LAYOUT2_BOXES } from "./Layout2SVG";
 
-export default function NameLayout2({ name }) {
-  const letters = name.toLowerCase().split("");
-  const COLORS = ["#FE47C6", "#70FE99", "#7A5BFE"];
+const COLORS = ["#FE47C6", "#70FE99", "#7A5BFE"];
 
-  const slots = [
-    {
-      x: 387.234,
-      y: 170.75,
-      w: 546.489,
-      h: 474.296,
-      transform: "rotate(4.16948 387.234 170.75)"
-    },
-    {
-      x: 578.605,
-      y: 778.491,
-      w: 642.752,
-      h: 423.321,
-      transform: "rotate(-11.6969 578.605 778.491)"
-    }
-  ];
+const getLetterColor = (index) => COLORS[index % COLORS.length];
+
+function ResponsiveLetter({ letter, box, color }) {
+  const textRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    if (!textRef.current || !letter) return;
+
+    const bbox = textRef.current.getBBox();
+    if (!bbox.width || !bbox.height) return;
+
+    const paddingX = box.w * 0.00;
+    const paddingY = box.h * 0.00;
+
+    const availableWidth = box.w - paddingX * 2;
+    const availableHeight = box.h - paddingY * 2;
+
+    const scaleX = availableWidth / bbox.width;
+    const scaleY = availableHeight / bbox.height;
+
+    setScale(Math.min(scaleX, scaleY));
+  }, [letter, box.w, box.h]);
+
+  const centerX = box.x + box.w / 2;
+  const centerY = box.y + box.h / 2;
+
+  return (
+    <g>
+      <text
+        ref={textRef}
+        x={centerX}
+        y={centerY}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="Megazoid"
+        fontSize="100"
+        fill={color}
+        className="display2-text"
+        visibility="hidden"
+      >
+        {letter}
+      </text>
+
+      <g transform={`translate(${centerX} ${centerY}) scale(${scale})`}>
+        <text
+          x={0}
+          y={0}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontFamily="Megazoid"
+          fontSize="100"
+          fill={color}
+          className="display2-text"
+        >
+          {letter}
+        </text>
+      </g>
+    </g>
+  );
+}
+
+export default function NameLayout2({ name = "" }) {
+  const letters = name.toLowerCase().split("").slice(0, LAYOUT2_BOXES.length);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -30,33 +76,24 @@ export default function NameLayout2({ name }) {
       >
         <Layout2SVG />
 
-        {letters.map((letter, index) => {
-          if (!slots[index]) return null;
+        {LAYOUT2_BOXES.map((box, index) => {
+          const letter = letters[index];
+          if (!letter) return null;
 
-          const slot = slots[index];
+          const content = (
+            <ResponsiveLetter
+              letter={letter}
+              box={box}
+              color={getLetterColor(index)}
+            />
+          );
 
-          const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2 -70;
-
-          // Auto scale font based on rectangle height
-          const fontSize = slot.h * 0.8;
-               const randomColor =
-            COLORS[Math.floor(Math.random() * COLORS.length)];
-          return (
-            <g key={index} transform={slot.transform}>
-              <text
-                x={centerX}
-                y={centerY}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontFamily="Megazoid"
-                fontSize={fontSize}
-                fill={randomColor}
-              className="display2-text"
-              >
-                {letter}
-              </text>
+          return box.transform ? (
+            <g key={box.id} transform={box.transform}>
+              {content}
             </g>
+          ) : (
+            <g key={box.id}>{content}</g>
           );
         })}
       </svg>

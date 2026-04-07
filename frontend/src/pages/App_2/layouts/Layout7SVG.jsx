@@ -1,4 +1,59 @@
 import * as React from "react";
+
+export const LAYOUT7_BOXES = [
+  {
+    id: "box-1",
+    x: 386.75,
+    y: 169.75,
+    w: 334,
+    h: 368,
+  },
+  {
+    id: "box-2",
+    x: 754.75,
+    y: 169.75,
+    w: 372,
+    h: 368,
+  },
+  {
+    id: "box-3",
+    x: 263.072,
+    y: 537.75,
+    w: 437.849,
+    h: 380.737,
+    transform: "rotate(6.53363 263.072 537.75)",
+  },
+  {
+    id: "box-4",
+    x: 720.322,
+    y: 616.864,
+    w: 479.918,
+    h: 356.038,
+    transform: "rotate(-7.01904 720.322 616.864)",
+  },
+  {
+    id: "box-5",
+    x: 173.75,
+    y: 989.75,
+    w: 419,
+    h: 301,
+  },
+  {
+    id: "box-6",
+    x: 628.75,
+    y: 990.75,
+    w: 260,
+    h: 218,
+  },
+  {
+    id: "box-7",
+    x: 940.75,
+    y: 976.75,
+    w: 389,
+    h: 387,
+  },
+];
+
 const SVGComponent = (props) => (
   <svg
     width={1521}
@@ -8,7 +63,7 @@ const SVGComponent = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-     <image
+    <image
       href="/background.svg"
       x="0"
       y="0"
@@ -56,64 +111,28 @@ const SVGComponent = (props) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x={386.75}
-      y={169.75}
-      width={334}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={754.75}
-      y={169.75}
-      width={372}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={263.072}
-      y={537.75}
-      width={437.849}
-      height={380.737}
-      transform="rotate(6.53363 263.072 537.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={720.322}
-      y={616.864}
-      width={479.918}
-      height={356.038}
-      transform="rotate(-7.01904 720.322 616.864)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={173.75}
-      y={989.75}
-      width={419}
-      height={301}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={628.75}
-      y={990.75}
-      width={260}
-      height={218}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={940.75}
-      y={976.75}
-      width={389}
-      height={387}
-      fill="#D9D9D9"
-      display="none"
-    />
+
+    {LAYOUT7_BOXES.map((box) => {
+      const rect = (
+        <rect
+          x={box.x}
+          y={box.y}
+          width={box.w}
+          height={box.h}
+          fill="#D9D9D9"
+          display="block"
+        />
+      );
+
+      return box.transform ? (
+        <g key={box.id} transform={box.transform}>
+          {rect}
+        </g>
+      ) : (
+        <g key={box.id}>{rect}</g>
+      );
+    })}
   </svg>
 );
+
 export default SVGComponent;

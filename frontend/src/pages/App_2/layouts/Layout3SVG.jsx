@@ -1,4 +1,31 @@
 import * as React from "react";
+
+export const LAYOUT3_BOXES = [
+  {
+    id: "box-1",
+    x: 517.75,
+    y: 196.75,
+    w: 469,
+    h: 462,
+  },
+  {
+    id: "box-2",
+    x: 231.234,
+    y: 658.75,
+    w: 546.489,
+    h: 474.296,
+    transform: "rotate(4.16948 231.234 658.75)",
+  },
+  {
+    id: "box-3",
+    x: 788.152,
+    y: 723.736,
+    w: 473.455,
+    h: 387,
+    transform: "rotate(-11.6969 788.152 723.736)",
+  },
+];
+
 const SVGComponent = (props) => (
   <svg
     width={1521}
@@ -8,7 +35,7 @@ const SVGComponent = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-     <image
+    <image
       href="/background.svg"
       x="0"
       y="0"
@@ -16,6 +43,7 @@ const SVGComponent = (props) => (
       height="2117"
       preserveAspectRatio="xMidYMid slice"
     />
+
     <path
       d="M387.149 129.871H1130.67L1440.27 1081.71L1130.67 2033.07H917.549V1383.15"
       stroke="black"
@@ -56,25 +84,28 @@ const SVGComponent = (props) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect x={517.75} y={196.75} width={469} height={462} fill="#D9D9D9"   display="none" />
-    <rect
-      x={231.234}
-      y={658.75}
-      width={546.489}
-      height={474.296}
-      transform="rotate(4.16948 231.234 658.75)"
-      fill="#D9D9D9"
-        display="none"
-    />
-    <rect
-      x={788.152}
-      y={723.736}
-      width={473.455}
-      height={387}
-      transform="rotate(-11.6969 788.152 723.736)"
-      fill="#D9D9D9"
-        display="none"
-    />
+
+    {LAYOUT3_BOXES.map((box) => {
+      const rect = (
+        <rect
+          x={box.x}
+          y={box.y}
+          width={box.w}
+          height={box.h}
+          fill="#D9D9D9"
+          display="block"
+        />
+      );
+
+      return box.transform ? (
+        <g key={box.id} transform={box.transform}>
+          {rect}
+        </g>
+      ) : (
+        <g key={box.id}>{rect}</g>
+      );
+    })}
   </svg>
 );
+
 export default SVGComponent;

@@ -129,7 +129,7 @@ const Layout8SVG = (props) => (
           width={box.w}
           height={box.h}
           fill="#D9D9D9"
-          display="none"
+          display="block"
         />
       );
 

@@ -18,7 +18,7 @@ function ResponsiveLetter({ letter, box, color }) {
     if (!bbox.width || !bbox.height) return;
 
     // padding inside the rect
-    const paddingX = box.w * 0.0;
+    const paddingX = box.w * 0.00;
     const paddingY = box.h * 0.00;
 
     const availableWidth = box.w - paddingX * 2;

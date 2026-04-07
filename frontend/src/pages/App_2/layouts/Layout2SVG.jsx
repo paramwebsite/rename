@@ -1,4 +1,24 @@
 import * as React from "react";
+
+export const LAYOUT2_BOXES = [
+  {
+    id: "box-1",
+    x: 387.234,
+    y: 170.75,
+    w: 546.489,
+    h: 474.296,
+    transform: "rotate(4.16948 387.234 170.75)",
+  },
+  {
+    id: "box-2",
+    x: 578.605,
+    y: 778.491,
+    w: 642.752,
+    h: 423.321,
+    transform: "rotate(-11.6969 578.605 778.491)",
+  },
+];
+
 const SVGComponent = (props) => (
   <svg
     width={1521}
@@ -57,24 +77,28 @@ const SVGComponent = (props) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x={387.234}
-      y={170.75}
-      width={546.489}
-      height={474.296}
-      transform="rotate(4.16948 387.234 170.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={578.605}
-      y={778.491}
-      width={642.752}
-      height={423.321}
-      transform="rotate(-11.6969 578.605 778.491)"
-      fill="#D9D9D9"
-      display="none"
-    />
+
+    {LAYOUT2_BOXES.map((box) => {
+      const rect = (
+        <rect
+          x={box.x}
+          y={box.y}
+          width={box.w}
+          height={box.h}
+          fill="#D9D9D9"
+          display="block"
+        />
+      );
+
+      return box.transform ? (
+        <g key={box.id} transform={box.transform}>
+          {rect}
+        </g>
+      ) : (
+        <g key={box.id}>{rect}</g>
+      );
+    })}
   </svg>
 );
+
 export default SVGComponent;
