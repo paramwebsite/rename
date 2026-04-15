@@ -6,15 +6,11 @@
 // import axios from 'axios'
 // import { io, Socket } from 'socket.io-client'
 
-
-
 // const socket = io(API_URL);
 
 // const Dashboard = () => {
 //     const [name, setName] = useState('');
 //     const [message, setMesaage] = useState('');
-
-
 
 //     const handleNameSubmit = async () => {
 
@@ -25,11 +21,8 @@
 //                 setMesaage('');
 //             }, 4000);
 
-
 //             return;
 //         }
-
-
 
 //         const res = await axios.post(`${API_URL}/name`, {
 //             name
@@ -37,15 +30,11 @@
 
 //         console.log(res.data);
 
-
-
 //     }
-
 
 //     useEffect(() => {
 
 //         socket.emit('RegisterDashboard', 1);
-
 
 //     })
 
@@ -55,16 +44,10 @@
 //         // socket.emit("NameInput", { nameText })
 //     }
 
-
-
-
-
-
 //     return (
 //         <div className='w-full h-full   flex flex-col'>
 
 //             <h1 className='text-center text-2xl font-bold p-4  '>Reinvent Your name </h1>
-
 
 //             <div className="flex flex-col gap-14 min-h-screen ">
 //                 <div className=" bg-white shadow-lg  p-6 w-full ">
@@ -100,21 +83,9 @@
 //                     </div>
 //                 </div>
 
-
-
-
 //             </div>
 
-
-
-
 //         </div>
-
-
-
-
-
-
 
 //     )
 // }
@@ -382,7 +353,6 @@
 
 // export default Dashboard;
 
-
 // import React, { useEffect, useMemo, useRef, useState } from "react";
 // import Videos from "../component/Videos";
 // import Dipslays from "../component/Dipslays";
@@ -633,14 +603,13 @@
 
 // export default Dashboard;
 
-
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Videos from "../component/Videos";
 import Dipslays from "../component/Dipslays";
 import VideoToDisplay from "../component/VideoToDisplay";
 import { API_URL } from "../utils/config";
 import { getWS, sendJSON } from "../utils/ws";
-import { authenticateUID } from "../utils/auth";   // ⬅️ NEW
+import { authenticateUID } from "../utils/auth"; // ⬅️ NEW
 
 const Dashboard = () => {
   const ws = useMemo(() => getWS(), []);
@@ -709,7 +678,6 @@ const Dashboard = () => {
   //   // socket.on("card-detected", onDetected);
   //   // socket.on("card-lifted", onLifted);
 
-
   //   return () => {
   //     socket.off("card-detected", onDetected);
   //     socket.off("card-lifted", onLifted);
@@ -776,27 +744,80 @@ const Dashboard = () => {
     await fetch(`${API_URL}/visitors/data`, { method: "POST", body: fd });
   };
 
+  // const handleNameSubmit = async () => {
+  //   if (!uid) {
+  //     setMessage("Please place your RFID card first.");
+  //     setTimeout(() => setMessage(""), 3000);
+  //     return;
+  //   }
+  //   if (!name.trim()) {
+  //     setMessage("Display Name can't be empty");
+  //     setTimeout(() => setMessage(""), 3000);
+  //     return;
+  //   }
+
+  //   //socket.emit("NameInput", { nameText: name.trim() });
+  //   sendJSON(ws, { type: "NameInput", nameText: name.trim() });
+
+  //   try { await saveNameOnly(); } catch (e) { console.warn(e?.message); }
+  //   setStatus("✅ Name sent to displays. Waiting for card lift…");
+  //   setPhase("submitted");
+  // };
+
   const handleNameSubmit = async () => {
     if (!uid) {
       setMessage("Please place your RFID card first.");
       setTimeout(() => setMessage(""), 3000);
       return;
     }
+
     if (!name.trim()) {
       setMessage("Display Name can't be empty");
       setTimeout(() => setMessage(""), 3000);
       return;
     }
 
+    try {
+      // 1) get count from backend
+      const resp = await fetch(`${API_URL}/namecount/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          surname: "",
+        }),
+      });
 
-    //socket.emit("NameInput", { nameText: name.trim() });
-    sendJSON(ws, { type: "NameInput", nameText: name.trim() });
+      const result = await resp.json();
 
-    try { await saveNameOnly(); } catch (e) { console.warn(e?.message); }
-    setStatus("✅ Name sent to displays. Waiting for card lift…");
-    setPhase("submitted");
+      if (!resp.ok) {
+        throw new Error(result.message || "Failed to save name");
+      }
+
+      // 2) send BOTH name and count through websocket
+      sendJSON(ws, {
+        type: "NameInput",
+        nameText: name.trim(),
+        count: result.count,
+      });
+
+      // optional existing save
+      try {
+        await saveNameOnly();
+      } catch (e) {
+        console.warn(e?.message);
+      }
+
+      setStatus("✅ Name sent to displays. Waiting for card lift…");
+      setPhase("submitted");
+    } catch (err) {
+      console.error(err);
+      setMessage("Failed to save name/count");
+      setTimeout(() => setMessage(""), 3000);
+    }
   };
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && phase === "form") {
       e.preventDefault();
@@ -816,7 +837,9 @@ const Dashboard = () => {
     // 1) AUTH FIRST
     const auth = await authenticateUID(API_URL, entered);
     if (!auth.ok) {
-      setStatus(`❌ ${auth.body?.message || "Authorization failed"} (${auth.status})`);
+      setStatus(
+        `❌ ${auth.body?.message || "Authorization failed"} (${auth.status})`,
+      );
       setPhase("idle");
       return; // ⛔ do NOT post /events/add_event
     }
@@ -825,7 +848,11 @@ const Dashboard = () => {
     await fetch(`${API_URL}/events/add_event`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ UID: entered, stationId, eventType: "cardDetected" }),
+      body: JSON.stringify({
+        UID: entered,
+        stationId,
+        eventType: "cardDetected",
+      }),
     });
   };
 
@@ -894,7 +921,9 @@ const Dashboard = () => {
             {phase === "form" && (
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col">
-                  <label className="mb-1 text-sm font-medium text-gray-700">UID</label>
+                  <label className="mb-1 text-sm font-medium text-gray-700">
+                    UID
+                  </label>
                   <input
                     value={uid}
                     readOnly
@@ -903,7 +932,10 @@ const Dashboard = () => {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="DisplayName" className="mb-1 text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="DisplayName"
+                    className="mb-1 text-sm font-medium text-gray-700"
+                  >
                     Enter your Name
                   </label>
                   <input
@@ -923,10 +955,11 @@ const Dashboard = () => {
                   <button
                     onClick={handleNameSubmit}
                     disabled={name.trim().length === 0}
-                    className={`w-28 text-white font-medium py-2 rounded-lg transition ${name.trim().length === 0
-                      ? "bg-blue-300 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
-                      }`}
+                    className={`w-28 text-white font-medium py-2 rounded-lg transition ${
+                      name.trim().length === 0
+                        ? "bg-blue-300 cursor-not-allowed"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    }`}
                   >
                     Submit
                   </button>

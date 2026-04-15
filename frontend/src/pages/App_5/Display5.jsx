@@ -3,16 +3,12 @@ import { SlotDigit } from "./Slotdigit";
 import slotFrame from "./assests/slot_machine.svg";
 import { getWS, sendJSON } from "../../utils/ws";
 
-
-
 const displayId = 5;
 
 export default function Display5() {
-   const ws = useMemo(() => getWS(), []);
-   const [name, setName] = useState("");
-   const [count, setCount] = useState(0);
-
-
+  const ws = useMemo(() => getWS(), []);
+  const [name, setName] = useState("");
+  const [count, setCount] = useState(0);
 
   const [spinId, setSpinId] = useState(0);
   const [digits, setDigits] = useState(["0", "0", "0"]);
@@ -25,81 +21,70 @@ export default function Display5() {
     setSpinId((id) => id + 1);
   }, [count]);
 
-
-
-
-
-
-
-
   // ---------------------------------Web socket part start ---------------------------
 
- 
-  
-  
-    useEffect(() => {
-      const onOpen = () => {
-        // register this display
-        sendJSON(ws, { type: "registerDisplay", displayId });
-      };
-  
-      const onMessage = (event) => {
-        let msg;
-        try {
-          msg = JSON.parse(event.data);
-        } catch {
-          return;
+  useEffect(() => {
+    const onOpen = () => {
+      // register this display
+      sendJSON(ws, { type: "registerDisplay", displayId });
+    };
+
+    const onMessage = (event) => {
+      let msg;
+      try {
+        msg = JSON.parse(event.data);
+        console.log(msg);
+      } catch {
+        return;
+      }
+
+      // if (msg.type === "newName") {
+      //   console.log("Received:", msg);
+
+      //   setName(msg.name);
+
+      //   // ✅ ONLY update count if backend sent it
+      //   if (typeof msg.count === "number") {
+      //     console.log(msg.count);
+      //     setCount(msg.count);
+      //   }
+      // }
+
+      if (msg.type === "newName") {
+        console.log("Received:", msg);
+
+        setName(msg.name);
+
+        const numericCount = Number(msg.count);
+        console.log("numericCount:", numericCount, "type:", typeof msg.count);
+
+        if (Number.isFinite(numericCount)) {
+          setCount(numericCount);
         }
-  
-        if (msg.type === "newName") {
-          console.log("Received:", msg);
-  
-          setName(msg.name);
-  
-          // ✅ ONLY update count if backend sent it
-          if (typeof msg.count === "number") {
-            setCount(msg.count);
-          }
-        }
-  
-  
-        if (msg.type === "resetDisplay") {
-          setName("");
-        }
-      };
-  
-      if (ws.readyState === WebSocket.OPEN) onOpen();
-      else ws.addEventListener("open", onOpen);
-  
-      ws.addEventListener("message", onMessage);
-  
-      return () => {
-        ws.removeEventListener("open", onOpen);
-        ws.removeEventListener("message", onMessage);
-        // ⚠️ don't ws.close() because ws is a shared singleton (like your old getSocket)
-      };
-    }, [ws]);
+      }
 
+      // if (msg.type === "resetDisplay") {
+      //   setName("");
+      // }
+      if (msg.type === "resetDisplay") {
+        setName("");
+        setCount(0);
+      }
+    };
 
+    if (ws.readyState === WebSocket.OPEN) onOpen();
+    else ws.addEventListener("open", onOpen);
 
+    ws.addEventListener("message", onMessage);
 
-
-
+    return () => {
+      ws.removeEventListener("open", onOpen);
+      ws.removeEventListener("message", onMessage);
+      // ⚠️ don't ws.close() because ws is a shared singleton (like your old getSocket)
+    };
+  }, [ws]);
 
   // ---------------------------------Web socket part End---------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div className="mx-auto w-full max-w-[900px] ">
@@ -123,7 +108,7 @@ export default function Display5() {
                 "[text-shadow:-3px_-3px_0_#8b0000,3px_-3px_0_#8b0000,-3px_3px_0_#8b0000,3px_3px_0_#8b0000,0_5px_0_#000]",
               ].join(" ")}
             >
-              {name}s
+              {name}'s
             </div>
 
             <div
