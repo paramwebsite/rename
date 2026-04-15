@@ -14,7 +14,6 @@
 // const nameRouter = require('./routes/name')
 // const getImageRouter = require('./routes/getImage');
 
-
 // const PORT = 4000;
 
 // const app = express();
@@ -28,17 +27,12 @@
 // app.use(cors());
 // app.use(express.json());
 
-
 // // simple logger
 // app.use((req, res, next) => {
 //   const now = new Date().toISOString();
 //   console.log(`[${now}] ${req.method} ${req.url}`);
 //   next();
 // });
-
-
-
-
 
 // io.on("connection", (socket) => {
 //   console.log("Client connected:", socket.id);
@@ -50,12 +44,10 @@
 //     socket.join("displays")
 //   });
 
-
 //   socket.on('RegisterDashboard',(dashboardId)=>{
 //     console.log(`dashboardId: ${dashboardId} registered on socket ${socket.id}`);
 //     socket.join(`dashboards`);
 //   })
-
 
 //   socket.on('NameInput',(data)=>{
 //     const {nameText} = data;
@@ -73,12 +65,7 @@
 //   next();
 // });
 
-
-
-
-// // app.use("/video", videoStreamRoutes); 
-
-
+// // app.use("/video", videoStreamRoutes);
 
 // (async function start() {
 
@@ -104,11 +91,10 @@
 
 // })();
 
-import dns from 'dns';
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 // import dns from "dns";
 // dns.setDefaultResultOrder("ipv4first");
-
 
 // --- Core & tooling (ESM) ---
 import express from "express";
@@ -120,7 +106,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 
-
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -128,9 +113,9 @@ const __dirname = path.dirname(__filename);
 const require = createRequire(import.meta.url);
 
 // --- RFID stack (ESM) ---
-import connectDB from "./db.js";                       // RFID DB (mongoose) connector
+import connectDB from "./db.js"; // RFID DB (mongoose) connector
 import healthRoute from "./routes/healthRoute.js"; // health route
-import startEventWatcher from "./changeStream.js";     // RFID change stream -> emits socket events
+import startEventWatcher from "./changeStream.js"; // RFID change stream -> emits socket events
 import cardRoutes from "./routes/cardRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
 import visitorRoutes from "./routes/visitorRoutes.js";
@@ -139,7 +124,7 @@ import visitorRoutes from "./routes/visitorRoutes.js";
 import nameCountRouter from "./routes/nameCount.js";
 
 // --- Application stack (CommonJS) ---
-const { initDB } = require("./Database/db");           // your app DB (whatever you used)
+const { initDB } = require("./Database/db"); // your app DB (whatever you used)
 // const videoRoutes     = require("./routes/videos");
 const displayRoutes = require("./routes/displays");
 // const videoStreamRoutes = require("./routes/videoStream");
@@ -166,7 +151,7 @@ async function start() {
   const wss = new WebSocketServer({ server });
 
   // ---- WebSocket client tracking ----
-  const displays = new Map();   // displayId -> ws
+  const displays = new Map(); // displayId -> ws
   const dashboards = new Set(); // ws set (optional)
   const touchDesigners = new Set(); // optional if you want to track TD
 
@@ -221,7 +206,7 @@ async function start() {
   app.use("/visitors", visitorRoutes);
 
   // Name count route
-  app.use("/namecount", nameRouter);
+  app.use("/namecount", nameCountRouter);
 
   // 6) Application routes (unchanged paths)
   // app.use("/videos",  videoRoutes);
@@ -230,7 +215,7 @@ async function start() {
   app.use("/name", nameRouter);
   // app.use("/image",    getImageRouter);
 
-  app.use('/display11/name', display11NameRouter);
+  app.use("/display11/name", display11NameRouter);
 
   // 6.1) Health route
   app.use("/health", healthRoute);
@@ -284,14 +269,12 @@ async function start() {
   //   });
   // });
   wss.on("connection", (ws, req) => {
-
     const ip = req.socket.remoteAddress;
     const url = req.url;
 
     console.log("🟢 WS client connected");
     console.log(`   from IP: ${ip}`);
     console.log(`   URL: ${url}`);
-
 
     ws.meta = { role: null, displayId: null };
 
@@ -331,23 +314,40 @@ async function start() {
       }
 
       // 3️⃣ Name input from TouchDesigner
+      // if (msg.type === "NameInput") {
+      //   const nameText = msg.nameText;
+
+      //   console.log("📥 Name from TouchDesigner:", nameText);
+
+      //   if (!nameText) return;
+
+      //   broadcastToDisplays({
+      //     type: "newName",
+      //     name: nameText,
+      //   });
+
+      //   console.log("📤 Broadcasted to displays:", nameText);
+      //   return;
+      // }
+
+      // 3️⃣ Name input from TouchDesigner / Dashboard
       if (msg.type === "NameInput") {
         const nameText = msg.nameText;
+        const count = msg.count;
 
-        console.log("📥 Name from TouchDesigner:", nameText);
+        console.log("📥 Name from TouchDesigner:", nameText, "count:", count);
 
         if (!nameText) return;
 
         broadcastToDisplays({
           type: "newName",
           name: nameText,
+          count,
         });
 
-        console.log("📤 Broadcasted to displays:", nameText);
+        console.log("📤 Broadcasted to displays:", { name: nameText, count });
         return;
       }
-
-
 
       // 4️⃣ Clear displays
       if (msg.type === "ClearDisplays") {
@@ -361,8 +361,8 @@ async function start() {
         displays.delete(ws.meta.displayId);
         console.log(`🔴 Display ${ws.meta.displayId} disconnected`);
       }
-      if (ws.meta.role === "dashboard") dashboards.delete(ws)
-      if (ws.meta.role === "touchdesigner") touchDesigners.delete(ws);;
+      if (ws.meta.role === "dashboard") dashboards.delete(ws);
+      if (ws.meta.role === "touchdesigner") touchDesigners.delete(ws);
     });
   });
 
@@ -370,9 +370,12 @@ async function start() {
   setInterval(() => {
     console.log(
       "📡 WS status →",
-      "displays:", displays.size,
-      "dashboards:", dashboards.size,
-      "touchdesigners:", touchDesigners.size
+      "displays:",
+      displays.size,
+      "dashboards:",
+      dashboards.size,
+      "touchdesigners:",
+      touchDesigners.size,
     );
   }, 60000);
 
@@ -382,7 +385,7 @@ async function start() {
 
   // 9) Listen
   server.listen(PORT, "0.0.0.0", () =>
-    console.log(`🚀 Unified server listening on http://localhost:${PORT}`)
+    console.log(`🚀 Unified server listening on http://localhost:${PORT}`),
   );
 }
 
@@ -390,4 +393,3 @@ start().catch((err) => {
   console.error("Failed to start unified server:", err);
   process.exit(1);
 });
-
