@@ -1,5 +1,68 @@
 import * as React from "react";
-const SVGComponent = (props) => (
+
+export const LAYOUT8_BOXES = [
+  {
+    id: "top-left",
+    x: 386.75,
+    y: 169.75,
+    w: 334,
+    h: 368,
+  },
+  {
+    id: "top-right",
+    x: 754.75,
+    y: 169.75,
+    w: 372,
+    h: 368,
+  },
+  {
+    id: "left-rotated",
+    x: 272.751,
+    y: 552.75,
+    w: 288,
+    h: 453,
+    transform: "rotate(12.7532 272.751 552.75)",
+  },
+  {
+    id: "middle-rotated",
+    x: 567.799,
+    y: 500.75,
+    w: 454.349,
+    h: 390.274,
+    transform: "rotate(3.46218 567.799 573.75)",
+  },
+  {
+    id: "right-rotated",
+    x: 1053.26,
+    y: 592.283,
+    w: 203.431,
+    h: 401.634,
+    transform: "rotate(-7.01904 1053.26 592.283)",
+  },
+  {
+    id: "bottom-left",
+    x: 196.75,
+    y: 1081.75,
+    w: 381,
+    h: 301,
+  },
+  {
+    id: "bottom-middle",
+    x: 601.75,
+    y: 890.75,
+    w: 320,
+    h: 300,
+  },
+  {
+    id: "bottom-right",
+    x: 940.75,
+    y: 1020.75,
+    w: 363,
+    h: 301,
+  },
+];
+
+const Layout8SVG = (props) => (
   <svg
     width={1521}
     height={2117}
@@ -8,7 +71,7 @@ const SVGComponent = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-     <image
+    <image
       href="/background.svg"
       x="0"
       y="0"
@@ -16,6 +79,7 @@ const SVGComponent = (props) => (
       height="2117"
       preserveAspectRatio="xMidYMid slice"
     />
+
     <path
       d="M387.149 129.871H1130.67L1440.27 1081.71L1130.67 2033.07H917.549V1383.15"
       stroke="black"
@@ -56,73 +120,28 @@ const SVGComponent = (props) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x={386.75}
-      y={169.75}
-      width={334}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={754.75}
-      y={169.75}
-      width={372}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={272.751}
-      y={552.75}
-      width={288}
-      height={453}
-      transform="rotate(12.7532 272.751 552.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={567.799}
-      y={573.75}
-      width={454.349}
-      height={390.274}
-      transform="rotate(3.46218 567.799 573.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={1053.26}
-      y={592.283}
-      width={203.431}
-      height={401.634}
-      transform="rotate(-7.01904 1053.26 592.283)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={196.75}
-      y={1081.75}
-      width={381}
-      height={301}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={940.75}
-      y={1020.75}
-      width={363}
-      height={301}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={601.75}
-      y={1020.75}
-      width={315}
-      height={168}
-      fill="#D9D9D9"
-      display="none"
-    />
+
+    {LAYOUT8_BOXES.map((box) => {
+      const rect = (
+        <rect
+          x={box.x}
+          y={box.y}
+          width={box.w}
+          height={box.h}
+          fill="#D9D9D9"
+          display="none"
+        />
+      );
+
+      return box.transform ? (
+        <g key={box.id} transform={box.transform}>
+          {rect}
+        </g>
+      ) : (
+        <g key={box.id}>{rect}</g>
+      );
+    })}
   </svg>
 );
-export default SVGComponent;
+
+export default Layout8SVG;

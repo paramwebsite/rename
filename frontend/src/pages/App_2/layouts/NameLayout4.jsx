@@ -1,69 +1,96 @@
-import React from "react";
-import Layout4SVG from "./Layout4SVG";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import Layout4SVG, { LAYOUT4_BOXES } from "./Layout4SVG";
 
-export default function NameLayout4({ name }) {
-  const letters = name.toLowerCase().split("");
-  const COLORS = ["#FE47C6", "#70FE99", "#7A5BFE"];
+const COLORS = ["#FE47C6", "#70FE99", "#7A5BFE"];
 
-  const slots = [
-    // Top left
-    { x: 386.75, y: 269.75, w: 334, h: 368 },
+const getLetterColor = (index) => COLORS[index % COLORS.length];
 
-    // Top right
-    { x: 754.75, y: 269.75, w: 372, h: 368 },
+function ResponsiveLetter({ letter, box, color }) {
+  const textRef = useRef(null);
+  const [scale, setScale] = useState(1);
 
-    // Large rotated left
-    {
-      x: 263.951,
-      y: 658.535,
-      w: 546.489,
-      h: 474.296,
-      transform: "rotate(4.16948 263.951 658.535)",
-    },
+  useLayoutEffect(() => {
+    if (!textRef.current || !letter) return;
 
-    // Rotated right
-    {
-      x: 838.75,
-      y: 713.26,
-      w: 421.785,
-      h: 387,
-      transform: "rotate(-11.6969 838.75 713.26)",
-    },
-  ];
+    const bbox = textRef.current.getBBox();
+    if (!bbox.width || !bbox.height) return;
+
+    const paddingX = box.w * 0.00;
+    const paddingY = box.h * 0.00;
+
+    const availableWidth = box.w - paddingX * 2;
+    const availableHeight = box.h - paddingY * 2;
+
+    const scaleX = availableWidth / bbox.width;
+    const scaleY = availableHeight / bbox.height;
+
+    setScale(Math.min(scaleX, scaleY));
+  }, [letter, box.w, box.h]);
+
+  const centerX = box.x + box.w / 2;
+  const centerY = box.y + box.h / 2;
+
+  return (
+    <g>
+      <text
+        ref={textRef}
+        x={centerX}
+        y={centerY}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="Megazoid"
+        fontSize="100"
+        fill={color}
+        className="display2-text"
+        visibility="hidden"
+      >
+        {letter}
+      </text>
+
+      <g transform={`translate(${centerX} ${centerY}) scale(${scale})`}>
+        <text
+          x={0}
+          y={0}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontFamily="Megazoid"
+          fontSize="100"
+          fill={color}
+          className="display2-text"
+        >
+          {letter}
+        </text>
+      </g>
+    </g>
+  );
+}
+
+export default function NameLayout4({ name = "" }) {
+  const letters = name.toLowerCase().split("").slice(0, LAYOUT4_BOXES.length);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <svg viewBox="0 0 1521 2117" style={{ width: "100%", height: "100%" }}>
         <Layout4SVG />
 
-        {slots.map((slot, index) => {
+        {LAYOUT4_BOXES.map((box, index) => {
           const letter = letters[index];
           if (!letter) return null;
 
-          const centerX = slot.x + slot.w / 2;
-          const centerY = slot.y + slot.h / 2;
-          // 🎨 Pick random color for this letter
-          const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-          const text = (
-            <text
-              x={centerX}
-              y={centerY}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontFamily="Megazoid"
-              fontSize="300"
-              fill={randomColor}
-            >
-              {letter}
-            </text>
+          const content = (
+            <ResponsiveLetter
+              letter={letter}
+              box={box}
+              color={getLetterColor(index)}
+            />
           );
 
-          return slot.transform ? (
-            <g key={index} transform={slot.transform}>
-              {text}
+          return box.transform ? (
+            <g key={box.id} transform={box.transform}>
+              {content}
             </g>
           ) : (
-            <g key={index}>{text}</g>
+            <g key={box.id}>{content}</g>
           );
         })}
       </svg>

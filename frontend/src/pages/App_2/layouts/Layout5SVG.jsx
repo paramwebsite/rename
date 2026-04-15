@@ -1,4 +1,45 @@
 import * as React from "react";
+
+export const LAYOUT5_BOXES = [
+  {
+    id: "box-1",
+    x: 286.75,
+    y: 69.75,
+    w: 434,
+    h: 468,
+  },
+  {
+    id: "box-2",
+    x: 754.75,
+    y: 69.75,
+    w: 472,
+    h: 468,
+  },
+  {
+    id: "box-3",
+    x: 163.951,
+    y: 658.535,
+    w: 464.237,
+    h: 613.676,
+    transform: "rotate(4.16948 263.951 658.535)",
+  },
+  {
+    id: "box-4",
+    x: 652.75,
+    y: 672.75,
+    w: 364,
+    h: 417,
+  },
+  {
+    id: "box-5",
+    x: 990.319,
+    y: 815.156,
+    w: 342.378,
+    h: 487,
+    transform: "rotate(-14.3472 940.319 715.156)",
+  },
+];
+
 const SVGComponent = (props) => (
   <svg
     width={1521}
@@ -8,7 +49,7 @@ const SVGComponent = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-     <image
+    <image
       href="/background.svg"
       x="0"
       y="0"
@@ -56,48 +97,28 @@ const SVGComponent = (props) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x={386.75}
-      y={269.75}
-      width={334}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={754.75}
-      y={269.75}
-      width={372}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={263.951}
-      y={658.535}
-      width={364.237}
-      height={613.676}
-      transform="rotate(4.16948 263.951 658.535)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={652.75}
-      y={672.75}
-      width={264}
-      height={417}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={940.319}
-      y={715.156}
-      width={312.378}
-      height={387}
-      transform="rotate(-14.3472 940.319 715.156)"
-      fill="#D9D9D9"
-      display="none"
-    />
+
+    {LAYOUT5_BOXES.map((box) => {
+      const rect = (
+        <rect
+          x={box.x}
+          y={box.y}
+          width={box.w}
+          height={box.h}
+          fill="#D9D9D9"
+          display="none"
+        />
+      );
+
+      return box.transform ? (
+        <g key={box.id} transform={box.transform}>
+          {rect}
+        </g>
+      ) : (
+        <g key={box.id}>{rect}</g>
+      );
+    })}
   </svg>
 );
+
 export default SVGComponent;

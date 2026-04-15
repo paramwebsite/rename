@@ -3,8 +3,13 @@
   src: url("/App_2/megazoid-font/MegazoidLayersRight-Regular.ttf") format("truetype");
 }
 
-svg text {
+/* svg text {
   font-family: "Megazoid";
   font-size: 370px;
 
+} */
+
+.display2-text{
+  font-size: 370px;
+  font-family: "Megazoid";
 }

@@ -1,36 +1,102 @@
-import React from "react";
-import SVGLayout from "./Layout11SVG"; // your SVG component file
-import "../Display2.css";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import Layout11SVG, { LAYOUT11_BOXES } from "./Layout11SVG";
+
 const COLORS = ["#FE47C6", "#70FE99", "#7A5BFE"];
-export default function NameLayout11({ name }) {
-  const letters = name.toLowerCase().split("");
+
+const getLetterColor = (index) => COLORS[index % COLORS.length];
+
+function ResponsiveLetter({ letter, box, color }) {
+  const textRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    if (!textRef.current || !letter) return;
+
+    const bbox = textRef.current.getBBox();
+    if (!bbox.width || !bbox.height) return;
+
+    const paddingX = box.w * 0.00;
+    const paddingY = box.h * 0.00;
+
+    const availableWidth = box.w - paddingX * 2;
+    const availableHeight = box.h - paddingY * 2;
+
+    const scaleX = availableWidth / bbox.width;
+    const scaleY = availableHeight / bbox.height;
+
+    setScale(Math.min(scaleX, scaleY));
+  }, [letter, box.w, box.h]);
+
+  const centerX = box.x + box.w / 2;
+  const centerY = box.y + box.h / 2;
 
   return (
-    <div className="name-layout">
-      <SVGLayout />
+    <g>
+      <text
+        ref={textRef}
+        x={centerX}
+        y={centerY}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontFamily="Megazoid"
+        fontSize="100"
+        fill={color}
+        className="display2-text"
+        visibility="hidden"
+      >
+        {letter}
+      </text>
 
-      {/* Overlay letters */}
-      <div className="letter-layer">
-        {letters.map((letter, i) => {
-          // 🎨 Pick random color for this letter
-          const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-          return (
-            <div>
-              <text
-                x={centerX}
-                y={centerY}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontFamily="Megazoid"
-                fontSize="260"
-                fill={randomColor}
-              >
-                {letter}
-              </text>
-            </div>
+      <g transform={`translate(${centerX} ${centerY}) scale(${scale})`}>
+        <text
+          x={0}
+          y={0}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontFamily="Megazoid"
+          fontSize="100"
+          fill={color}
+          className="display2-text"
+        >
+          {letter}
+        </text>
+      </g>
+    </g>
+  );
+}
+
+export default function NameLayout11({ name = "" }) {
+  const letters = name.toLowerCase().split("").slice(0, LAYOUT11_BOXES.length);
+
+  return (
+    <div style={{ width: "100%", height: "100%" }}>
+      <svg
+        viewBox="0 0 1521 2117"
+        style={{ width: "100%", height: "100%", background: "transparent" }}
+      >
+        <Layout11SVG />
+
+        {LAYOUT11_BOXES.map((box, index) => {
+          const letter = letters[index];
+          if (!letter) return null;
+
+          const content = (
+            <ResponsiveLetter
+              letter={letter}
+              box={box}
+              color={getLetterColor(index)}
+            />
+          );
+
+          return box.transform ? (
+            <g key={box.id} transform={box.transform}>
+              {content}
+            </g>
+          ) : (
+            <g key={box.id}>{content}</g>
           );
         })}
-      </div>
+      </svg>
     </div>
   );
 }

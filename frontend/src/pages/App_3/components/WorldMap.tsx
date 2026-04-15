@@ -12,6 +12,7 @@ import { THEME, normalizeCountry, COORDINATES_OVERRIDE } from "../constants";
 import { CountryPopularity, OriginData } from "../types";
 import LegendOverlay from "./LegendOverlay";
 import { Translations } from "openai/resources/audio.mjs";
+import MapLegend from "./MapLegend";
 
 interface WorldMapProps {
   popularityData: CountryPopularity[];
@@ -254,6 +255,7 @@ const WorldMap: React.FC<WorldMapProps> = ({
     <div className="relative w-full h-full ">
       <div className=" relative w-full aspect-[2/1] border-4 border-[#5d4037] bg-[#d9c5a0] shadow-2xl overflow-hidden antique-texture">
         <div className="absolute inset-0 border-2 border-[#5d4037] m-1 pointer-events-none z-10"></div>
+        <MapLegend />
 
         <ComposableMap
           projection="geoMercator"
@@ -271,6 +273,8 @@ const WorldMap: React.FC<WorldMapProps> = ({
           height={HEIGHT}
           className="w-full h-full "
         >
+
+          
           {/* Fix: Added required 'id' property to Sphere component */}
           <Sphere
             id="rsm-sphere"
@@ -410,7 +414,7 @@ const WorldMap: React.FC<WorldMapProps> = ({
             </foreignObject>
           ))}
 
-          <Marker coordinates={[-160, -45]}>
+          {/* <Marker coordinates={[-160, -45]}>
             <g opacity="0.4" transform="scale(0.5)">
               <circle r="40" fill="none" stroke="#5d4037" strokeWidth="1" />
               <path
@@ -421,12 +425,12 @@ const WorldMap: React.FC<WorldMapProps> = ({
               <text
                 y="-55"
                 textAnchor="middle"
-                className="text-sm fill-[#5d4037] font-bold"
+                className=" fill-[#5d4037] font-bold"
               >
                 N
               </text>
             </g>
-          </Marker>
+          </Marker> */}
         </ComposableMap>
 
         {isLoading && (

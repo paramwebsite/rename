@@ -1,4 +1,104 @@
 import * as React from "react";
+
+export const LAYOUT12_BOXES = [
+  {
+    id: "box-1",
+    x: 386.75,
+    y: 69.75,
+    w: 334,
+    h: 368,
+  },
+  {
+    id: "box-2",
+    x: 754.75,
+    y: 69.75,
+    w: 372,
+    h: 368,
+  },
+  {
+    id: "box-3",
+    x: 200.751,
+    y: 452.75,
+    w: 288,
+    h: 453,
+    transform: "rotate(12.7532 272.751 552.75)",
+  },
+  {
+    id: "box-4",
+    x: 487.799,
+    y: 510.75,
+    w: 300.954,
+    h: 332.639,
+    transform: "rotate(3.46218 567.799 573.75)",
+  },
+  {
+    id: "box-5",
+    x: 810.799,
+    y: 510.75,
+    w: 300.954,
+    h: 348.251,
+    transform: "rotate(3.46218 810.799 567.75)",
+  },
+  {
+    id: "box-6",
+    x: 1100.26,
+    y: 492.283,
+    w: 203.431,
+    h: 401.634,
+    transform: "rotate(-7.01904 1053.26 592.283)",
+  },
+  {
+    id: "box-7",
+    x: 96.75,
+    y: 981.75,
+    w: 381,
+    h: 301,
+  },
+  {
+    id: "box-8",
+
+    x: 602.75,
+    y: 907.75,
+    w: 350,
+    h: 301,
+    transform: "rotate(-3.10286 278.75 1420.77)",
+  },
+  {
+    id: "box-9",
+
+    x: 973.75,
+    y: 920.75,
+    w: 425.016,
+    h: 427.494,
+    transform: "rotate(2.13331 982.219 1374.75)",
+  },
+  {
+    id: "box-10",
+
+    x: 278.75,
+    y: 1320.77,
+    w: 288.398,
+    h: 300.08,
+    transform: "rotate(-8.66267 362.75 1765.13)",
+  },
+  {
+    id: "box-11",
+
+    x: 982.219,
+    y: 1374.75,
+    w: 331,
+    h: 301,
+  },
+  {
+    id: "box-12",
+
+    x: 320.75,
+    y: 1665.13,
+    w: 225.016,
+    h: 327.494,
+  },
+];
+
 const SVGComponent = (props) => (
   <svg
     width={1521}
@@ -8,7 +108,7 @@ const SVGComponent = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-     <image
+    <image
       href="/background.svg"
       x="0"
       y="0"
@@ -56,109 +156,28 @@ const SVGComponent = (props) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x={386.75}
-      y={169.75}
-      width={334}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={754.75}
-      y={169.75}
-      width={372}
-      height={368}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={272.751}
-      y={552.75}
-      width={288}
-      height={453}
-      transform="rotate(12.7532 272.751 552.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={567.799}
-      y={573.75}
-      width={226.954}
-      height={232.639}
-      transform="rotate(3.46218 567.799 573.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={810.799}
-      y={567.75}
-      width={226.954}
-      height={298.251}
-      transform="rotate(3.46218 810.799 567.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={1053.26}
-      y={592.283}
-      width={203.431}
-      height={401.634}
-      transform="rotate(-7.01904 1053.26 592.283)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={196.75}
-      y={1081.75}
-      width={381}
-      height={301}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={278.75}
-      y={1420.77}
-      width={259}
-      height={301}
-      transform="rotate(-3.10286 278.75 1420.77)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={982.219}
-      y={1374.75}
-      width={225.016}
-      height={227.494}
-      transform="rotate(2.13331 982.219 1374.75)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={362.75}
-      y={1765.13}
-      width={188.398}
-      height={191.08}
-      transform="rotate(-8.66267 362.75 1765.13)"
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={602.75}
-      y={907.75}
-      width={331}
-      height={301}
-      fill="#D9D9D9"
-      display="none"
-    />
-    <rect
-      x={973.75}
-      y={1020.75}
-      width={359}
-      height={326}
-      fill="#D9D9D9"
-      display="none"
-    />
+
+    {LAYOUT12_BOXES.map((box) => {
+      const rect = (
+        <rect
+          x={box.x}
+          y={box.y}
+          width={box.w}
+          height={box.h}
+          fill="#D9D9D9"
+          display="none"
+        />
+      );
+
+      return box.transform ? (
+        <g key={box.id} transform={box.transform}>
+          {rect}
+        </g>
+      ) : (
+        <g key={box.id}>{rect}</g>
+      );
+    })}
   </svg>
 );
+
 export default SVGComponent;
