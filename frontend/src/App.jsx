@@ -12,13 +12,13 @@ import Display3 from './pages/App_3/Display3'
 import Display4 from './pages/App_4/Display4'
 import Display5 from './pages/App_5/Display5'
 import Display6 from './pages/App_6/Display6'
-import Display7 from './pages/App_7/Display7'
 import Display8 from './pages/App_8/Display8'
 import Display9 from './pages/App_9/Display9'
 import Display10 from './pages/App_10/Display10'
 
 import Display12 from './pages/App_12/Display12'
 import Display11 from './pages/App_11/Display11'
+import Display_7 from './pages/App_7/Display_7'
 
 
 
@@ -37,7 +37,7 @@ const App = () => {
         <Route path='/display4' element={<Display4/>} />
         <Route path='/display5' element={<Display5/>} />
         <Route path='/display6' element={<Display6/>} />
-        <Route path='/display7' element={<Display7/>} />
+        <Route path='/display7' element={<Display_7/>} />
         <Route path='/display8' element={<Display8/>} />
         <Route path='/display9' element={<Display9/>} />
         <Route path='/display10' element={<Display10/>} />
