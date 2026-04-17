@@ -7,7 +7,7 @@ const displayId = 5;
 
 export default function Display5() {
   const ws = useMemo(() => getWS(), []);
-  const [name, setName] = useState("");
+  const [name, setName] = useState("abhishek");
   const [count, setCount] = useState(0);
 
   const [spinId, setSpinId] = useState(0);
@@ -87,9 +87,9 @@ export default function Display5() {
   // ---------------------------------Web socket part End---------------------------
 
   return (
-    <div className="mx-auto w-full max-w-[900px] ">
+    <div className=" w-screen h-screen    ">
       {/* strict 1:1 */}
-      <div className="relative aspect-square w-full">
+      <div className="mx-auto relative aspect-square h-full  ">
         <img
           src={slotFrame}
           className="absolute inset-0 h-full w-full object-contain"
@@ -103,12 +103,19 @@ export default function Display5() {
             <div
               className={[
                 // responsive font sizing
-                "font-black uppercase leading-[1.1] tracking-[1px] text-[#ffd700]",
+                "font-black  leading-[1.1] tracking-[1px] text-[#ffd700]",
                 "text-[clamp(16px,4.2vw,44px)]",
                 "[text-shadow:-3px_-3px_0_#8b0000,3px_-3px_0_#8b0000,-3px_3px_0_#8b0000,3px_3px_0_#8b0000,0_5px_0_#000]",
               ].join(" ")}
             >
-              {name}'s
+              <span className="uppercase">{name}</span>
+              {/* <sup
+                className={[
+                                  "text-[clamp(16px,4.2vw,44px)]",
+                ].join(" ")}
+              > */}
+                's
+              {/* </sup> */}
             </div>
 
             <div
