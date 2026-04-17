@@ -49,14 +49,14 @@ const Display8 = () => {
         // 👇 store it here
         setInputValue(msg.name);
 
-        console.log(msg.name)
+        console.log(msg.name);
         // 👇 call handleSubmit from Display8
         handleSubmit(msg.name);
         return;
       }
 
       if (msg.type === "resetDisplay") {
-        resetDisplay();
+        // resetDisplay();
       }
     };
 
@@ -76,40 +76,34 @@ const Display8 = () => {
 
   return (
     <div className="h-screen w-screen bg-black flex items-center justify-center">
+      {inputValue ? (
+        <div className="aspect-[4/1] w-full max-w-screen overflow-hidden">
+          <div className="h-full bg-[#0A1A2A] text-white relative">
+       
+           
+                <SpellerMachine
+                  elements={elements}
+                  inputValue={inputValue}
+                  shouldAnimate={shouldAnimate}
+                  setShouldAnimate={setShouldAnimate}
+                  onReset={resetDisplay}
+                />
+             
 
-
-    {inputValue?(
-      <div className="aspect-[4/1] w-full max-w-screen overflow-hidden">
-        <div className="min-h-full bg-[#0A1A2A] text-white">
-          <div className="container mx-auto py-8">
-            <header className="text-center mb-8">
-              <h1 className="text-4xl font-bold mb-2">
-                Periodic Speller
-              </h1>
-              <p className="text-xl opacity-90">
-                Discover the elements in your words!
-              </p>
-            </header>
-
-            <main>
-              <SpellerMachine
-                elements={elements}
-                inputValue={inputValue}
-                shouldAnimate={shouldAnimate}
-                setShouldAnimate={setShouldAnimate}
-                onReset={resetDisplay}
-              />
-            </main>
+             {/* <div className="absolute inset-0">
+              <button onClick={()=>handleSubmit(inputValue)}>
+                submit
+              </button>
+             </div> */}
+       
           </div>
         </div>
-      </div>
-    ):( <div className="aspect-[4/1] w-full max-w-screen overflow-hidden"
-      style={{ backgroundImage: "url(src/pages/App_11/assets/glitch.gif)" }}>
-      </div>)}
-      
-
-
-     
+      ) : (
+        <div
+          className="aspect-[4/1] w-full max-w-screen overflow-hidden"
+          style={{ backgroundImage: "url(src/pages/App_11/assets/glitch.gif)" }}
+        ></div>
+      )}
     </div>
   );
 };

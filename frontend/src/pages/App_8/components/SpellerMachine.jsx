@@ -11,9 +11,11 @@ export function SpellerMachine({
   onReset,
 }) {
   const getCardSize = (count) => {
-    if (count <= 4) return "w-[140px] sm:w-[160px]";
+
+    console.log(count)
+    if (count <= 4) return "w-[300px] sm:w-[350px]";
     if (count <= 6) return "w-[120px] sm:w-[140px]";
-    if (count <= 8) return "w-[100px] sm:w-[120px]";
+    if (count <= 8) return "w-[160px] sm:w-[220px]";
     if (count <= 10) return "w-[80px] sm:w-[100px]";
     return "w-[70px] sm:w-[90px]";
   };
@@ -75,22 +77,22 @@ export function SpellerMachine({
 
     return (
       <motion.div
-        className="relative h-full w-full flex flex-col"
+        className="relative h-full w-full flex flex-col "
         animate={{
           opacity: isSpinning ? 0.7 : 1,
           scale: isSpinning ? 0.95 : 1,
         }}
       >
         <div className="relative z-10 h-full flex flex-col p-3">
-          <div className="text-sm text-blue-200 self-end">
+          <div className="text-2xl text-blue-200 self-end">
             {displayElement.atomicNumber}
           </div>
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-3xl font-bold text-white">
+            <div className="text-7xl font-bold text-white">
               {displayElement.symbol}
             </div>
           </div>
-          <div className="text-xs text-blue-200 text-center">
+          <div className="text-xl text-blue-200 text-center">
             {displayElement.fullName}
           </div>
         </div>
@@ -98,17 +100,17 @@ export function SpellerMachine({
     );
   };
 
-  return (
-    <div className="relative px-6">
+  return ( 
+    <div className="relative w-full h-full ">
       <AnimatePresence>
         {elements.length > 0 && (
           <motion.div
-            className="w-full mx-auto bg-[#23313F] rounded-lg p-8 mb-24"
+            className="w-full h-full  bg-[#23313F] rounded-lg   flex justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
           >
-            <div className="flex justify-center flex-wrap gap-4">
+            <div className=" w-full flex justify-center items-center  flex-wrap gap-4 border-2">
               {elements.map((el, i) => (
                 <div
                   key={`${el.symbol}-${i}`}
@@ -124,11 +126,7 @@ export function SpellerMachine({
               ))}
             </div>
 
-            <div className="text-center mt-6">
-              <p className="text-xl font-medium">
-                {inputValue}
-              </p>
-            </div>
+          
           </motion.div>
         )}
       </AnimatePresence>
