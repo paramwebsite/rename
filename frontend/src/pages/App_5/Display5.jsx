@@ -7,7 +7,7 @@ const displayId = 5;
 
 export default function Display5() {
   const ws = useMemo(() => getWS(), []);
-  const [name, setName] = useState("abhishek");
+  const [name, setName] = useState("");
   const [count, setCount] = useState(0);
 
   const [spinId, setSpinId] = useState(0);
@@ -109,13 +109,9 @@ export default function Display5() {
               ].join(" ")}
             >
               <span className="uppercase">{name}</span>
-              {/* <sup
-                className={[
-                                  "text-[clamp(16px,4.2vw,44px)]",
-                ].join(" ")}
-              > */}
+             
                 's
-              {/* </sup> */}
+             
             </div>
 
             <div
