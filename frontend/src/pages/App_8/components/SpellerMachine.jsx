@@ -11,8 +11,7 @@ export function SpellerMachine({
   onReset,
 }) {
   const getCardSize = (count) => {
-
-    console.log(count)
+    console.log(count);
     if (count <= 4) return "w-[300px] sm:w-[350px]";
     if (count <= 6) return "w-[120px] sm:w-[140px]";
     if (count <= 8) return "w-[160px] sm:w-[220px]";
@@ -46,9 +45,7 @@ export function SpellerMachine({
       let intervalTimer;
 
       const sequence = Array.from({ length: 20 }, () => {
-        const randIndex = Math.floor(
-          Math.random() * periodicElements.length
-        );
+        const randIndex = Math.floor(Math.random() * periodicElements.length);
         return periodicElements[randIndex];
       });
 
@@ -60,8 +57,7 @@ export function SpellerMachine({
         spinTimer = setTimeout(() => {
           clearInterval(intervalTimer);
           setIsSpinning(false);
-          if (index === elements.length - 1)
-            setShouldAnimate(false);
+          if (index === elements.length - 1) setShouldAnimate(false);
         }, spinDuration + spinDelay);
       }
 
@@ -87,12 +83,13 @@ export function SpellerMachine({
           <div className="text-2xl text-blue-200 self-end">
             {displayElement.atomicNumber}
           </div>
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center -translate-y-2">
             <div className="text-7xl font-bold text-white">
               {displayElement.symbol}
             </div>
           </div>
-          <div className="text-xl text-blue-200 text-center">
+
+          <div className="text-xl text-blue-200 text-center -translate-y-2">
             {displayElement.fullName}
           </div>
         </div>
@@ -100,7 +97,7 @@ export function SpellerMachine({
     );
   };
 
-  return ( 
+  return (
     <div className="relative w-full h-full ">
       <AnimatePresence>
         {elements.length > 0 && (
@@ -115,18 +112,13 @@ export function SpellerMachine({
                 <div
                   key={`${el.symbol}-${i}`}
                   className={`${getCardSize(
-                    elements.length
+                    elements.length,
                   )} aspect-square bg-gradient-to-br ${el.color?.from} ${el.color?.to} rounded-lg overflow-hidden shadow-lg`}
                 >
-                  <SlotMachineContent
-                    element={el}
-                    index={i}
-                  />
+                  <SlotMachineContent element={el} index={i} />
                 </div>
               ))}
             </div>
-
-          
           </motion.div>
         )}
       </AnimatePresence>

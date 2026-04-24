@@ -65,7 +65,7 @@ export default function Display9() {
   // },[])
 
   return name ? (
-    <ResultScreen name={name} onBack={() => setName(null)} />
+    <ResultScreen name={name} />
   ) : (
     <InputScreen onSubmit={setName} />
   );
